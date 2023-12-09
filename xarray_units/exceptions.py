@@ -3,7 +3,6 @@ __all__ = [
     "UnitsConversionError",
     "UnitsExistError",
     "UnitsNotFoundError",
-    "UnitsNotValidError",
 ]
 
 
@@ -27,11 +26,5 @@ class UnitsConversionError(UnitsError):
 
 class UnitsNotFoundError(UnitsError):
     """Units do not exist in a DataArray."""
-
-    pass
-
-
-class UnitsNotValidError(UnitsError):
-    """Units are not valid for handling."""
 
     pass
