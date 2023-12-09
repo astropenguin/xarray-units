@@ -20,6 +20,17 @@ UnitsLike = Union[Unit, str]
 UNITS_ATTR = "units"
 
 
+def get_units(da: xr.DataArray) -> Optional[UnitsLike]:
+    """Return units of a DataArray."""
+    if (units := da.attrs.get(UNITS_ATTR)) is None:
+        return units
+
+    if isinstance(units, UnitsLike):
+        return units
+
+    raise TypeError("Units must be Astropy units or string.")
+
+
 def set(
     da: TDataArray,
     /,
@@ -41,7 +52,7 @@ def set(
             and units already exist in the input DataArray.
 
     """
-    if not overwrite and (da_units := da.attrs.get(UNITS_ATTR)) is not None:
+    if not overwrite and (da_units := get_units(da)) is not None:
         raise UnitsExistError(f"Units already exist ({da_units!r}).")
 
     return da.assign_attrs(units=str(units))
@@ -64,13 +75,13 @@ def to(
         DataArray converted to given units.
 
     """
-    if (da_units := da.attrs.get(UNITS_ATTR)) is None:
+    if (da_units := get_units(da)) is None:
         raise UnitsNotFoundError("Units do not exist.")
 
     try:
         Quantity(0, da_units).to(units, equivalencies)  # type: ignore
     except UnitConversionError as error:
-        raise UnitsNotConvertedError(str(error))
+        raise UnitsNotConvertedError(error)
 
     def func(da: TDataArray) -> TDataArray:
         data = Quantity(da, da_units).to(units, equivalencies)  # type: ignore
