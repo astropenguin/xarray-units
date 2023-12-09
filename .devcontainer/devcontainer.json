@@ -1,0 +1,32 @@
+{
+    "name": "xarray-units",
+    "image":"python:3.12",
+    "onCreateCommand": "pip install poetry==1.7.1",
+    "postCreateCommand": "poetry install",
+    "containerEnv": {
+        "POETRY_VIRTUALENVS_CREATE": "false"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "github.vscode-pull-request-github",
+                "mhutchie.git-graph",
+                "ms-python.black-formatter",
+                "ms-python.python",
+                "streetsidesoftware.code-spell-checker",
+                "tamasfe.even-better-toml"
+            ],
+            "settings": {
+                "files.insertFinalNewline": true,
+                "files.trimTrailingWhitespace": true,
+                "[python]": {
+                    "editor.defaultFormatter": "ms-python.black-formatter",
+                    "editor.formatOnSave": true,
+                    "editor.insertSpaces": true,
+                    "editor.tabSize": 4,
+                    "python.languageServer": "Pylance"
+                }
+            }
+        }
+    }
+}

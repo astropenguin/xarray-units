@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "xarray-units"
+version = "0.0.1"
+description = "xarray extension for handling units"
+authors = ["Akio Taniguchi <taniguchi@a.phys.nagoya-u.ac.jp>"]
+homepage = "https://github.com/astropenguin/xarray-units/"
+keywords = ["xarray", "xarray-accessor", "xarray-extension"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.9, <3.13"
+xarray = ">=2022.3, <2024.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.11"
+ipython = "^8.18"
+pyright = "^1.1"
+pytest = "^7.4"
+
+[tool.pyright]
+typeCheckingMode = "strict"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
