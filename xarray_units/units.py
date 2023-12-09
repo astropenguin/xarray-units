@@ -18,6 +18,7 @@ from .exceptions import (
 
 # type hints
 TDataArray = TypeVar("TDataArray", bound=xr.DataArray)
+Equivalencies = Optional[Equivalency]
 UnitsLike = Union[Unit, str]
 
 
@@ -56,7 +57,7 @@ def to(
     da: TDataArray,
     units: Union[UnitsLike, xr.DataArray],
     /,
-    equivalencies: Optional[Equivalency] = None,
+    equivalencies: Equivalencies = None,
 ) -> TDataArray:
     """Convert units of a DataArray.
 
@@ -96,7 +97,7 @@ def convert(
     from_: UnitsLike,
     to: UnitsLike,
     /,
-    equivalencies: Optional[Equivalency] = None,
+    equivalencies: Equivalencies = None,
 ) -> Any:
     """Convert units of any data."""
     try:
