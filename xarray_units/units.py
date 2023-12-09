@@ -1,13 +1,14 @@
-__all__ = ["set"]
+__all__ = ["set", "to"]
 
 
 # standard library
-from typing import TypeVar, Union
+from typing import Optional, TypeVar, Union
 
 
 # dependencies
 import xarray as xr
-from astropy.units import Unit  # type: ignore
+from astropy.units import Equivalency, Quantity, Unit, UnitConversionError
+from .exceptions import UnitsExistError, UnitsNotConvertedError, UnitsNotFoundError
 
 
 # type hints
@@ -19,20 +20,9 @@ UnitsLike = Union[Unit, str]
 UNITS_ATTR = "units"
 
 
-class UnitsExistError(Exception):
-    """Exception used when units already exist."""
-
-    pass
-
-
-class UnitsNotFoundError(Exception):
-    """Exception used when units do not exist."""
-
-    pass
-
-
 def set(
     da: TDataArray,
+    /,
     units: UnitsLike,
     overwrite: bool = False,
 ) -> TDataArray:
@@ -51,7 +41,39 @@ def set(
             and units already exist in the input DataArray.
 
     """
-    if not overwrite and UNITS_ATTR in da.attrs:
-        raise UnitsExistError("Units already exist.")
+    if not overwrite and (da_units := da.attrs.get(UNITS_ATTR)) is not None:
+        raise UnitsExistError(f"Units already exist ({da_units!r}).")
 
     return da.assign_attrs(units=str(units))
+
+
+def to(
+    da: TDataArray,
+    /,
+    units: UnitsLike,
+    equivalencies: Optional[Equivalency] = None,
+) -> TDataArray:
+    """Convert units of a DataArray.
+
+    Args:
+        da: Input DataArray.
+        units: Units to be converted from the current ones.
+        equivalencies: Optional Astropy equivalencies.
+
+    Returns:
+        DataArray converted to given units.
+
+    """
+    if (da_units := da.attrs.get(UNITS_ATTR)) is None:
+        raise UnitsNotFoundError("Units do not exist.")
+
+    try:
+        Quantity(0, da_units).to(units, equivalencies)  # type: ignore
+    except UnitConversionError as error:
+        raise UnitsNotConvertedError(str(error))
+
+    def func(da: TDataArray) -> TDataArray:
+        data = Quantity(da, da_units).to(units, equivalencies)  # type: ignore
+        return da.copy(data=data)
+
+    return set(xr.map_blocks(func, da), units, True)
