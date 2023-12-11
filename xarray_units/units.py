@@ -1,4 +1,4 @@
-__all__ = ["apply", "like", "set", "to"]
+__all__ = ["apply", "decompose", "like", "set", "to"]
 
 
 # standard library
@@ -59,6 +59,24 @@ def apply(da: TDataArray, name: str, /, *args: Any, **kwargs: Any) -> TDataArray
         return block.copy(data=data)
 
     return set(map_blocks(per_block, da), units_of(test), True)
+
+
+def decompose(da: TDataArray, /) -> TDataArray:
+    """Convert a DataArray with units to decomposed ones.
+
+    Args:
+        da: Input DataArray with units.
+
+    Returns:
+        DataArray with the decomposed units.
+
+    Raises:
+        UnitsApplicationError: Raised if the application fails.
+        UnitsNotFoundError: Raised if units are not found.
+        UnitsNotValidError: Raised if units are not valid.
+
+    """
+    return apply(da, "decompose")
 
 
 def like(
