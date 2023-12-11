@@ -108,17 +108,17 @@ def to(
         raise UnitsNotFoundError(repr(da))
 
     # test units conversion
-    convert(1, da_units, units, equivalencies)
+    to_any(1, da_units, units, equivalencies)
 
-    def to(da: TDataArray) -> TDataArray:
-        data = convert(da, da_units, units, equivalencies)
-        return da.copy(data=data)
+    def per_block(block: TDataArray) -> TDataArray:
+        data = to_any(block, da_units, units, equivalencies)
+        return block.copy(data=data)
 
-    return set(map_blocks(to, da), units, True)
+    return set(map_blocks(per_block, da), units, True)
 
 
 # helper functions
-def convert(
+def to_any(
     data: Any,
     from_units: UnitsLike,
     to_units: UnitsLike,
