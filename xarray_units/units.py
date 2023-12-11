@@ -2,16 +2,17 @@ __all__ = ["like", "set", "to"]
 
 
 # standard library
-from typing import Any, Optional, TypeVar, Union
+from typing import Any, Optional, TypeVar, Union, overload
 
 
 # dependencies
-from astropy.units import Equivalency, Quantity, UnitBase
+from astropy.units import Equivalency, Quantity, Unit, UnitBase
 from xarray import DataArray, map_blocks
 from .exceptions import (
     UnitsConversionError,
     UnitsExistError,
     UnitsNotFoundError,
+    UnitsNotValidError,
 )
 
 
@@ -129,13 +130,27 @@ def convert(
         raise UnitsConversionError(f"{from_units!r} -> {to_units!r}")
 
 
-def units_of(obj: Any) -> Optional[str]:
-    """Return units in an object if they exist."""
+@overload
+def units_of(obj: Quantity) -> UnitBase:
+    ...
+
+
+@overload
+def units_of(obj: DataArray) -> Optional[UnitBase]:
+    ...
+
+
+def units_of(obj: Any) -> Any:
+    """Return units of an object if they exist and are valid."""
+    if isinstance(obj, Quantity):
+        if isinstance(units := obj.unit, UnitBase):
+            return units
+
     if isinstance(obj, DataArray):
         if (units := obj.attrs.get(UNITS_ATTR)) is None:
-            return units
-        else:
-            return str(units)
+            return None
 
-    if isinstance(obj, Quantity):
-        return str(obj.unit)
+        if isinstance(units := Unit(units), UnitBase):  # type: ignore
+            return units
+
+    raise UnitsNotValidError(repr(obj))
