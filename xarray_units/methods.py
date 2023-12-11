@@ -9,7 +9,7 @@ from typing import Any, Optional, TypeVar, Union, overload
 # dependencies
 from astropy.units import Equivalency, Quantity, Unit, UnitBase
 from xarray import DataArray, map_blocks
-from .exceptions import (
+from .utils import (
     UnitsApplicationError,
     UnitsExistError,
     UnitsNotFoundError,
