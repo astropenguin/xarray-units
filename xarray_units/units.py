@@ -6,8 +6,8 @@ from typing import Any, Optional, TypeVar, Union
 
 
 # dependencies
-import xarray as xr
-from astropy.units import Equivalency, Quantity, Unit
+from astropy.units import Equivalency, Quantity, UnitBase
+from xarray import DataArray, map_blocks
 from .exceptions import (
     UnitsConversionError,
     UnitsExistError,
@@ -16,9 +16,9 @@ from .exceptions import (
 
 
 # type hints
-TDataArray = TypeVar("TDataArray", bound=xr.DataArray)
+TDataArray = TypeVar("TDataArray", bound=DataArray)
 Equivalencies = Optional[Equivalency]
-UnitsLike = Union[Unit, str]
+UnitsLike = Union[UnitBase, str]
 
 
 # constants
@@ -27,7 +27,7 @@ UNITS_ATTR = "units"
 
 def like(
     da: TDataArray,
-    other: xr.DataArray,
+    other: DataArray,
     /,
     equivalencies: Equivalencies = None,
 ) -> TDataArray:
@@ -110,25 +110,32 @@ def to(
         data = convert(da, da_units, units, equivalencies)
         return da.copy(data=data)
 
-    return set(xr.map_blocks(to, da), units, True)
+    return set(map_blocks(to, da), units, True)
 
 
 # helper functions
 def convert(
     data: Any,
-    units_from: UnitsLike,
-    units_to: UnitsLike,
+    from_units: UnitsLike,
+    to_units: UnitsLike,
     /,
     equivalencies: Equivalencies = None,
-) -> Any:
-    """Convert units of any data."""
+) -> Quantity:
+    """Convert data with units to other units."""
     try:
-        data = Quantity(data, units_from)
-        return data.to(units_to, equivalencies).value
+        data = Quantity(data, from_units)
+        return data.to(to_units, equivalencies)
     except Exception:
-        raise UnitsConversionError(f"{units_from!r} -> {units_to!r}")
+        raise UnitsConversionError(f"{from_units!r} -> {to_units!r}")
 
 
-def units_of(da: xr.DataArray) -> Optional[UnitsLike]:
-    """Return units of a DataArray if it exists."""
-    return da.attrs.get(UNITS_ATTR)
+def units_of(obj: Any) -> Optional[str]:
+    """Return units in an object if they exist."""
+    if isinstance(obj, DataArray):
+        if (units := obj.attrs.get(UNITS_ATTR)) is None:
+            return units
+        else:
+            return str(units)
+
+    if isinstance(obj, Quantity):
+        return str(obj.unit)
