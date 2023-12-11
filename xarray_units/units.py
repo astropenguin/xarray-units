@@ -45,6 +45,7 @@ def like(
     Raises:
         UnitsConversionError: Raised if the unit conversion fails.
         UnitsNotFoundError: Raised if units are not found.
+        UnitsNotValidError: Raised if units are not valid.
 
     """
     if (units := units_of(other)) is None:
@@ -72,6 +73,7 @@ def set(
     Raises:
         UnitsExistError: Raised if units already exist.
             Not raised when ``overwrite`` is ``True``.
+        UnitsNotValidError: Raised if units are not valid.
 
     """
     if not overwrite and units_of(da) is not None:
@@ -86,7 +88,7 @@ def to(
     /,
     equivalencies: Equivalencies = None,
 ) -> TDataArray:
-    """Convert a DataArray with units to given units.
+    """Convert a DataArray with units to other units.
 
     Args:
         da: Input DataArray with units.
@@ -99,6 +101,7 @@ def to(
     Raises:
         UnitsConversionError: Raised if the unit conversion fails.
         UnitsNotFoundError: Raised if units are not found.
+        UnitsNotValidError: Raised if units are not valid.
 
     """
     if (da_units := units_of(da)) is None:
@@ -122,7 +125,7 @@ def convert(
     /,
     equivalencies: Equivalencies = None,
 ) -> Quantity:
-    """Convert data with units to other units."""
+    """Convert any data with units to other units."""
     try:
         data = Quantity(data, from_units)
         return data.to(to_units, equivalencies)
