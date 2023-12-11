@@ -47,7 +47,6 @@ def apply(
     if (da_units := units_of(da)) is None:
         raise UnitsNotFoundError(repr(da))
 
-    # test application
     try:
         test = apply_any(1, da_units, name, *args, **kwargs)
     except Exception as error:
