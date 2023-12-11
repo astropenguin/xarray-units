@@ -16,12 +16,16 @@ astropy = ">=5.2, <7.0"
 [tool.poetry.group.dev.dependencies]
 black = "^23.11"
 ipython = "^8.18"
+myst-parser = "^2.0"
+pydata-sphinx-theme = "^0.14"
 pyright = "^1.1"
 pytest = "^7.4"
+sphinx = "^7.2"
 
 [tool.pyright]
 typeCheckingMode = "strict"
 reportMissingTypeStubs = "warning"
+reportIncompatibleMethodOverride = "warning"
 
 [build-system]
 requires = ["poetry-core"]
