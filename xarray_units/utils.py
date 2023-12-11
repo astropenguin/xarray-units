@@ -73,14 +73,19 @@ def units_of(obj: Any) -> Optional[UnitBase]:
     if isinstance(obj, Quantity):
         if isinstance(units := obj.unit, UnitBase):
             return units
-
-        raise UnitsNotValidError(repr(obj))
+        else:
+            raise UnitsNotValidError(repr(obj))
 
     if isinstance(obj, DataArray):
         if (units := obj.attrs.get(UNITS_ATTR)) is None:
             return None
 
-        if isinstance(units := Unit(units), UnitBase):  # type: ignore
-            return units
+        try:
+            units = Unit(units)  # type: ignore
+        except Exception:
+            raise UnitsNotValidError(repr(obj))
 
-        raise UnitsNotValidError(repr(obj))
+        if isinstance(units, UnitBase):
+            return units
+        else:
+            raise UnitsNotValidError(repr(obj))
