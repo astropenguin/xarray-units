@@ -3,31 +3,30 @@ __all__ = ["apply", "decompose", "like", "set", "to"]
 
 # standard library
 from types import MethodType
-from typing import Any, Optional, TypeVar, Union, overload
+from typing import Any
 
 
 # dependencies
-from astropy.units import Equivalency, Quantity, Unit, UnitBase
+from astropy.units import Quantity
 from xarray import DataArray, map_blocks
 from .utils import (
+    Equivalencies,
+    TDataArray,
     UnitsApplicationError,
     UnitsExistError,
+    UnitsLike,
     UnitsNotFoundError,
-    UnitsNotValidError,
+    units_of,
 )
 
 
-# type hints
-TDataArray = TypeVar("TDataArray", bound=DataArray)
-Equivalencies = Optional[Equivalency]
-UnitsLike = Union[UnitBase, str]
-
-
-# constants
-UNITS_ATTR = "units"
-
-
-def apply(da: TDataArray, name: str, /, *args: Any, **kwargs: Any) -> TDataArray:
+def apply(
+    da: TDataArray,
+    name: str,
+    /,
+    *args: Any,
+    **kwargs: Any,
+) -> TDataArray:
     """Apply a method of Astropy Quantity to a DataArray.
 
     Args:
@@ -190,29 +189,3 @@ def ensure_consistency(data_in: Any, data_out: Any, /) -> Quantity:
         raise ValueError("Input and output shapes must be same.")
 
     return data_out
-
-
-@overload
-def units_of(obj: Quantity) -> UnitBase:
-    ...
-
-
-@overload
-def units_of(obj: DataArray) -> Optional[UnitBase]:
-    ...
-
-
-def units_of(obj: Any) -> Any:
-    """Return units of an object if they exist and are valid."""
-    if isinstance(obj, Quantity):
-        if isinstance(units := obj.unit, UnitBase):
-            return units
-
-    if isinstance(obj, DataArray):
-        if (units := obj.attrs.get(UNITS_ATTR)) is None:
-            return None
-
-        if isinstance(units := Unit(units), UnitBase):  # type: ignore
-            return units
-
-    raise UnitsNotValidError(repr(obj))
