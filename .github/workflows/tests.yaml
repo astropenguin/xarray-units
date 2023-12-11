@@ -26,3 +26,4 @@ jobs:
       - run: pip install poetry==1.7.1 && poetry install
       - run: black --check xarray_units
       - run: pyright xarray_units
+      - run: pytest -v tests
