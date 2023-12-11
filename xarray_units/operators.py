@@ -1,4 +1,20 @@
-__all__ = ["take"]
+__all__ = [
+    "take",
+    "lt",  # <
+    "le",  # <=
+    "eq",  # ==
+    "ne",  # !=
+    "ge",  # >=
+    "gt",  # >
+    "add",  # +
+    "sub",  # -
+    "mul",  # *
+    "pow",  # **
+    "matmul",  # @
+    "truediv",  # /
+    "floordiv",  # //
+    "mod",  # %
+]
 
 
 # standard library
@@ -84,7 +100,6 @@ def take(left: TDataArray, operator: Operator, right: Any, /) -> TDataArray:
         return set(map_blocks(per_block, left, (right,)), units, True)
 
 
-# helper functions
 def take_any(
     left: Any,
     left_units: UnitsLike,
@@ -97,3 +112,73 @@ def take_any(
     left = Quantity(left, left_units)
     right = Quantity(right, right_units)
     return getattr(opr, operator)(left, right)
+
+
+def lt(left: TDataArray, right: Any) -> TDataArray:
+    """Perform ``(left) < (right)`` with units."""
+    return take(left, "lt", right)
+
+
+def le(left: TDataArray, right: Any) -> TDataArray:
+    """Perform ``(left) <= (right)`` with units."""
+    return take(left, "le", right)
+
+
+def eq(left: TDataArray, right: Any) -> TDataArray:
+    """Perform ``(left) == (right)`` with units."""
+    return take(left, "eq", right)
+
+
+def ne(left: TDataArray, right: Any) -> TDataArray:
+    """Perform ``(left) != (right)`` with units."""
+    return take(left, "ne", right)
+
+
+def ge(left: TDataArray, right: Any) -> TDataArray:
+    """Perform ``(left) >= (right)`` with units."""
+    return take(left, "ge", right)
+
+
+def gt(left: TDataArray, right: Any) -> TDataArray:
+    """Perform ``(left) > (right)`` with units."""
+    return take(left, "gt", right)
+
+
+def add(left: TDataArray, right: Any) -> TDataArray:
+    """Perform ``(left) + (right)`` with units."""
+    return take(left, "add", right)
+
+
+def sub(left: TDataArray, right: Any) -> TDataArray:
+    """Perform ``(left) - (right)`` with units."""
+    return take(left, "sub", right)
+
+
+def mul(left: TDataArray, right: Any) -> TDataArray:
+    """Perform ``(left) * (right)`` with units."""
+    return take(left, "mul", right)
+
+
+def pow(left: TDataArray, right: Any) -> TDataArray:
+    """Perform ``(left) ** (right)`` with units."""
+    return take(left, "pow", right)
+
+
+def matmul(left: TDataArray, right: Any) -> TDataArray:
+    """Perform ``(left) @ (right)`` with units."""
+    return take(left, "matmul", right)
+
+
+def truediv(left: TDataArray, right: Any) -> TDataArray:
+    """Perform ``(left) / (right)`` with units."""
+    return take(left, "truediv", right)
+
+
+def floordiv(left: TDataArray, right: Any) -> TDataArray:
+    """Perform ``(left) // (right)`` with units."""
+    return take(left, "floordiv", right)
+
+
+def mod(left: TDataArray, right: Any) -> TDataArray:
+    """Perform ``(left) % (right)`` with units."""
+    return take(left, "mod", right)
