@@ -59,6 +59,37 @@ def apply(
     return set(map_blocks(per_block, da), units_of(test), True)
 
 
+def apply_any(
+    data: Any,
+    units: UnitsLike,
+    name: str,
+    /,
+    *args: Any,
+    **kwargs: Any,
+) -> Quantity:
+    """Apply a method of Astropy Quantity to any data."""
+    data = Quantity(data, units)
+
+    if isinstance(attr := getattr(data, name), MethodType):
+        return ensure_consistency(data, attr(*args, **kwargs))
+    else:
+        return ensure_consistency(data, attr)
+
+
+def ensure_consistency(data_in: Any, data_out: Any, /) -> Quantity:
+    """Ensure consistency between input and output data."""
+    if not isinstance(data_in, Quantity):
+        raise TypeError("Input must be Astropy Quantity.")
+
+    if not isinstance(data_out, Quantity):
+        raise TypeError("Output must be Astropy Quantity.")
+
+    if data_out.shape != data_in.shape:
+        raise ValueError("Input and output shapes must be same.")
+
+    return data_out
+
+
 def decompose(da: TDataArray, /) -> TDataArray:
     """Convert a DataArray with units to decomposed ones.
 
@@ -156,35 +187,3 @@ def to(
 
     """
     return apply(da, "to", units, equivalencies)
-
-
-# helper functions
-def apply_any(
-    data: Any,
-    units: UnitsLike,
-    name: str,
-    /,
-    *args: Any,
-    **kwargs: Any,
-) -> Quantity:
-    """Apply a method of Astropy Quantity to any data."""
-    data = Quantity(data, units)
-
-    if isinstance(attr := getattr(data, name), MethodType):
-        return ensure_consistency(data, attr(*args, **kwargs))
-    else:
-        return ensure_consistency(data, attr)
-
-
-def ensure_consistency(data_in: Any, data_out: Any, /) -> Quantity:
-    """Ensure consistency between input and output data."""
-    if not isinstance(data_in, Quantity):
-        raise TypeError("Input must be Astropy Quantity.")
-
-    if not isinstance(data_out, Quantity):
-        raise TypeError("Output must be Astropy Quantity.")
-
-    if data_out.shape != data_in.shape:
-        raise ValueError("Input and output shapes must be same.")
-
-    return data_out
