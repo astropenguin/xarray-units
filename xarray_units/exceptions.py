@@ -1,6 +1,6 @@
 __all__ = [
     "UnitsError",
-    "UnitsConversionError",
+    "UnitsApplicationError",
     "UnitsExistError",
     "UnitsNotFoundError",
     "UnitsNotValidError",
@@ -13,14 +13,14 @@ class UnitsError(Exception):
     pass
 
 
-class UnitsExistError(UnitsError):
-    """Units already exist in a DataArray."""
+class UnitsApplicationError(UnitsError):
+    """Units application is not successful."""
 
     pass
 
 
-class UnitsConversionError(UnitsError):
-    """Units cannot be converted to others."""
+class UnitsExistError(UnitsError):
+    """Units already exist in a DataArray."""
 
     pass
 

@@ -1,7 +1,8 @@
-__all__ = ["like", "set", "to"]
+__all__ = ["apply", "like", "set", "to"]
 
 
 # standard library
+from types import MethodType
 from typing import Any, Optional, TypeVar, Union, overload
 
 
@@ -9,7 +10,7 @@ from typing import Any, Optional, TypeVar, Union, overload
 from astropy.units import Equivalency, Quantity, Unit, UnitBase
 from xarray import DataArray, map_blocks
 from .exceptions import (
-    UnitsConversionError,
+    UnitsApplicationError,
     UnitsExistError,
     UnitsNotFoundError,
     UnitsNotValidError,
@@ -24,6 +25,40 @@ UnitsLike = Union[UnitBase, str]
 
 # constants
 UNITS_ATTR = "units"
+
+
+def apply(da: TDataArray, name: str, /, *args: Any, **kwargs: Any) -> TDataArray:
+    """Apply a method of Astropy Quantity to a DataArray.
+
+    Args:
+        da: Input DataArray with units.
+        name: Method (or property) name of Astropy Quantity.
+        *args: Positional arguments of the method.
+        *kwargs: Keyword arguments of the method.
+
+    Returns:
+        DataArray with the method (or property) applied.
+
+    Raises:
+        UnitsApplicationError: Raised if the application fails.
+        UnitsNotFoundError: Raised if units are not found.
+        UnitsNotValidError: Raised if units are not valid.
+
+    """
+    if (da_units := units_of(da)) is None:
+        raise UnitsNotFoundError(repr(da))
+
+    # test application
+    try:
+        test = apply_any(1, da_units, name, *args, **kwargs)
+    except Exception as error:
+        raise UnitsApplicationError(error)
+
+    def per_block(block: TDataArray) -> TDataArray:
+        data = apply_any(block, da_units, name, *args, **kwargs)
+        return block.copy(data=data)
+
+    return set(map_blocks(per_block, da), units_of(test), True)
 
 
 def like(
@@ -43,7 +78,7 @@ def like(
         DataArray with the converted units.
 
     Raises:
-        UnitsConversionError: Raised if the unit conversion fails.
+        UnitsApplicationError: Raised if the application fails.
         UnitsNotFoundError: Raised if units are not found.
         UnitsNotValidError: Raised if units are not valid.
 
@@ -51,7 +86,7 @@ def like(
     if (units := units_of(other)) is None:
         raise UnitsNotFoundError(repr(other))
 
-    return to(da, units, equivalencies)
+    return apply(da, "to", units, equivalencies)
 
 
 def set(
@@ -99,38 +134,44 @@ def to(
         DataArray with the converted units.
 
     Raises:
-        UnitsConversionError: Raised if the unit conversion fails.
+        UnitsApplicationError: Raised if the application fails.
         UnitsNotFoundError: Raised if units are not found.
         UnitsNotValidError: Raised if units are not valid.
 
     """
-    if (da_units := units_of(da)) is None:
-        raise UnitsNotFoundError(repr(da))
-
-    # test units conversion
-    to_any(1, da_units, units, equivalencies)
-
-    def per_block(block: TDataArray) -> TDataArray:
-        data = to_any(block, da_units, units, equivalencies)
-        return block.copy(data=data)
-
-    return set(map_blocks(per_block, da), units, True)
+    return apply(da, "to", units, equivalencies)
 
 
 # helper functions
-def to_any(
+def apply_any(
     data: Any,
-    from_units: UnitsLike,
-    to_units: UnitsLike,
+    units: UnitsLike,
+    name: str,
     /,
-    equivalencies: Equivalencies = None,
+    *args: Any,
+    **kwargs: Any,
 ) -> Quantity:
-    """Convert any data with units to other units."""
-    try:
-        data = Quantity(data, from_units)
-        return data.to(to_units, equivalencies)
-    except Exception:
-        raise UnitsConversionError(f"{from_units!r} -> {to_units!r}")
+    """Apply a method of Astropy Quantity to any data."""
+    data = Quantity(data, units)
+
+    if isinstance(attr := getattr(data, name), MethodType):
+        return ensure_consistency(data, attr(*args, **kwargs))
+    else:
+        return ensure_consistency(data, attr)
+
+
+def ensure_consistency(data_in: Any, data_out: Any, /) -> Quantity:
+    """Ensure consistency between input and output data."""
+    if not isinstance(data_in, Quantity):
+        raise TypeError("Input must be Astropy Quantity.")
+
+    if not isinstance(data_out, Quantity):
+        raise TypeError("Output must be Astropy Quantity.")
+
+    if data_out.shape != data_in.shape:
+        raise ValueError("Input and output shapes must be same.")
+
+    return data_out
 
 
 @overload
