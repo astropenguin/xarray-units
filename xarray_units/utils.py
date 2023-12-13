@@ -9,7 +9,7 @@ __all__ = [
 
 
 # standard library
-from typing import Any, Optional, TypeVar, Union, overload
+from typing import Any, Literal, Optional, TypeVar, Union, overload
 
 
 # dependencies
@@ -59,16 +59,26 @@ class UnitsNotValidError(UnitsError):
 
 
 @overload
-def units_of(obj: Quantity) -> UnitBase:
+def units_of(obj: Quantity, /, strict: Literal[False] = False) -> UnitBase:
     ...
 
 
 @overload
-def units_of(obj: Any) -> Optional[UnitBase]:
+def units_of(obj: Quantity, /, strict: Literal[True] = True) -> UnitBase:
     ...
 
 
-def units_of(obj: Any) -> Optional[UnitBase]:
+@overload
+def units_of(obj: Any, /, strict: Literal[False] = False) -> Optional[UnitBase]:
+    ...
+
+
+@overload
+def units_of(obj: Any, /, strict: Literal[True] = True) -> UnitBase:
+    ...
+
+
+def units_of(obj: Any, /, strict: bool = False) -> Optional[UnitBase]:
     """Return units of an object if they exist and are valid."""
     if isinstance(obj, Quantity):
         if isinstance(units := obj.unit, UnitBase):
@@ -77,15 +87,16 @@ def units_of(obj: Any) -> Optional[UnitBase]:
             raise UnitsNotValidError(repr(obj))
 
     if isinstance(obj, DataArray):
-        if (units := obj.attrs.get(UNITS_ATTR)) is None:
-            return None
+        if (units := obj.attrs.get(UNITS_ATTR)) is not None:
+            try:
+                units = Unit(units)  # type: ignore
+            except Exception:
+                raise UnitsNotValidError(repr(obj))
 
-        try:
-            units = Unit(units)  # type: ignore
-        except Exception:
-            raise UnitsNotValidError(repr(obj))
+            if isinstance(units, UnitBase):
+                return units
+            else:
+                raise UnitsNotValidError(repr(obj))
 
-        if isinstance(units, UnitBase):
-            return units
-        else:
-            raise UnitsNotValidError(repr(obj))
+    if strict:
+        raise UnitsNotFoundError(repr(obj))

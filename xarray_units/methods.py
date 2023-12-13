@@ -16,7 +16,6 @@ from .utils import (
     UnitsApplicationError,
     UnitsExistError,
     UnitsLike,
-    UnitsNotFoundError,
     units_of,
 )
 
@@ -45,16 +44,15 @@ def apply(
         UnitsNotValidError: Raised if units are not valid.
 
     """
-    if (da_units := units_of(da)) is None:
-        raise UnitsNotFoundError(repr(da))
+    units = units_of(da, True)
 
     try:
-        test = apply_any(1, da_units, name, *args, **kwargs)
+        test = apply_any(1, units, name, *args, **kwargs)
     except Exception as error:
         raise UnitsApplicationError(error)
 
     def per_block(block: TDataArray) -> TDataArray:
-        data = apply_any(block, da_units, name, *args, **kwargs)
+        data = apply_any(block, units, name, *args, **kwargs)
         return block.copy(data=data)
 
     return set(map_blocks(per_block, da), units_of(test), True)
@@ -131,10 +129,7 @@ def like(
         UnitsNotValidError: Raised if units are not valid.
 
     """
-    if (units := units_of(other)) is None:
-        raise UnitsNotFoundError(repr(other))
-
-    return apply(da, "to", units, equivalencies)
+    return apply(da, "to", units_of(other, True), equivalencies)
 
 
 def set(
