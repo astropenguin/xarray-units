@@ -1,4 +1,4 @@
-__all__ = ["apply", "decompose", "like", "set", "to"]
+__all__ = ["apply", "decompose", "like", "set", "to", "unset"]
 
 
 # standard library
@@ -10,6 +10,7 @@ from typing import Any
 from astropy.units import Quantity
 from xarray import DataArray, map_blocks
 from .utils import (
+    UNITS_ATTR,
     Equivalencies,
     TDataArray,
     UnitsApplicationError,
@@ -161,7 +162,7 @@ def set(
     if not overwrite and units_of(da) is not None:
         raise UnitsExistError(repr(da))
 
-    return da.assign_attrs(units=units)
+    return da.assign_attrs({UNITS_ATTR: units})
 
 
 def to(
@@ -187,3 +188,18 @@ def to(
 
     """
     return apply(da, "to", units, equivalencies)
+
+
+def unset(da: TDataArray, /) -> TDataArray:
+    """Remove units from a DataArray.
+
+    Args:
+        da: Input DataArray.
+
+    Returns:
+        DataArray with units removed.
+
+    """
+    da = da.copy(data=da.data)
+    da.attrs.pop(UNITS_ATTR)
+    return da
