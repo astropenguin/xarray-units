@@ -1,19 +1,21 @@
 __all__ = [
     "take",
+    # any-units operators
+    "mul",  # *
+    "pow",  # **
+    "matmul",  # @
+    "truediv",  # /
+    "mod",  # %
+    # same-units operators
+    "add",  # +
+    "sub",  # -
+    "floordiv",  # //
     "lt",  # <
     "le",  # <=
     "eq",  # ==
     "ne",  # !=
     "ge",  # >=
     "gt",  # >
-    "add",  # +
-    "sub",  # -
-    "mul",  # *
-    "pow",  # **
-    "matmul",  # @
-    "truediv",  # /
-    "floordiv",  # //
-    "mod",  # %
 ]
 
 
@@ -38,15 +40,15 @@ AnyUnitsOperator = Literal[
     "mod",  # %
 ]
 SameUnitsOperator = Literal[
+    "add",  # +
+    "sub",  # -
+    "floordiv",  # //
     "lt",  # <
     "le",  # <=
     "eq",  # ==
     "ne",  # !=
     "ge",  # >=
     "gt",  # >
-    "add",  # +
-    "sub",  # -
-    "floordiv",  # //
 ]
 Operator = Union[AnyUnitsOperator, SameUnitsOperator]
 
@@ -110,6 +112,46 @@ def take_any(
     return getattr(opr, operator)(left, right)
 
 
+def mul(left: TDataArray, right: Any) -> TDataArray:
+    """Perform ``(left) * (right)`` with units."""
+    return take(left, "mul", right)
+
+
+def pow(left: TDataArray, right: Any) -> TDataArray:
+    """Perform ``(left) ** (right)`` with units."""
+    return take(left, "pow", right)
+
+
+def matmul(left: TDataArray, right: Any) -> TDataArray:
+    """Perform ``(left) @ (right)`` with units."""
+    return take(left, "matmul", right)
+
+
+def truediv(left: TDataArray, right: Any) -> TDataArray:
+    """Perform ``(left) / (right)`` with units."""
+    return take(left, "truediv", right)
+
+
+def mod(left: TDataArray, right: Any) -> TDataArray:
+    """Perform ``(left) % (right)`` with units."""
+    return take(left, "mod", right)
+
+
+def add(left: TDataArray, right: Any) -> TDataArray:
+    """Perform ``(left) + (right)`` with units."""
+    return take(left, "add", right)
+
+
+def sub(left: TDataArray, right: Any) -> TDataArray:
+    """Perform ``(left) - (right)`` with units."""
+    return take(left, "sub", right)
+
+
+def floordiv(left: TDataArray, right: Any) -> TDataArray:
+    """Perform ``(left) // (right)`` with units."""
+    return take(left, "floordiv", right)
+
+
 def lt(left: TDataArray, right: Any) -> TDataArray:
     """Perform ``(left) < (right)`` with units."""
     return take(left, "lt", right)
@@ -138,43 +180,3 @@ def ge(left: TDataArray, right: Any) -> TDataArray:
 def gt(left: TDataArray, right: Any) -> TDataArray:
     """Perform ``(left) > (right)`` with units."""
     return take(left, "gt", right)
-
-
-def add(left: TDataArray, right: Any) -> TDataArray:
-    """Perform ``(left) + (right)`` with units."""
-    return take(left, "add", right)
-
-
-def sub(left: TDataArray, right: Any) -> TDataArray:
-    """Perform ``(left) - (right)`` with units."""
-    return take(left, "sub", right)
-
-
-def mul(left: TDataArray, right: Any) -> TDataArray:
-    """Perform ``(left) * (right)`` with units."""
-    return take(left, "mul", right)
-
-
-def pow(left: TDataArray, right: Any) -> TDataArray:
-    """Perform ``(left) ** (right)`` with units."""
-    return take(left, "pow", right)
-
-
-def matmul(left: TDataArray, right: Any) -> TDataArray:
-    """Perform ``(left) @ (right)`` with units."""
-    return take(left, "matmul", right)
-
-
-def truediv(left: TDataArray, right: Any) -> TDataArray:
-    """Perform ``(left) / (right)`` with units."""
-    return take(left, "truediv", right)
-
-
-def floordiv(left: TDataArray, right: Any) -> TDataArray:
-    """Perform ``(left) // (right)`` with units."""
-    return take(left, "floordiv", right)
-
-
-def mod(left: TDataArray, right: Any) -> TDataArray:
-    """Perform ``(left) % (right)`` with units."""
-    return take(left, "mod", right)
