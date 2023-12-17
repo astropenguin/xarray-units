@@ -81,6 +81,9 @@ def take(left: TDataArray, operator: Operator, right: Any, /) -> TDataArray:
     elif operator == "matmul":
         method = "__mul__"
         args = (Quantity(TESTER, right_units),)
+    elif operator == "eq" or operator == "ne":
+        method = "__lt__"
+        args = (Quantity(TESTER, right_units),)
     else:
         method = f"__{operator}__"
         args = (Quantity(TESTER, right_units),)

@@ -71,12 +71,12 @@ data_take: list[tuple[DataArray, Operator, Any, Any]] = [
     (km, "le", mm, DataArray([True, True, True])),
     (mm, "le", km, DataArray([True, True, True])),
     #
-    # (km, "eq", sc_1, UnitsApplicationError),
+    (km, "eq", sc_1, UnitsApplicationError),
     (km, "eq", sc_2, DataArray([False, True, False])),
     (km, "eq", mm, DataArray([True, True, True])),
     (mm, "eq", km, DataArray([True, True, True])),
     #
-    # (km, "ne", sc_1, UnitsApplicationError),
+    (km, "ne", sc_1, UnitsApplicationError),
     (km, "ne", sc_2, DataArray([True, False, True])),
     (km, "ne", mm, DataArray([False, False, False])),
     (mm, "ne", km, DataArray([False, False, False])),
