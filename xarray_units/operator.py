@@ -5,11 +5,11 @@ __all__ = [
     "pow",  # **
     "matmul",  # @
     "truediv",  # /
-    "mod",  # %
     # same-units operators
     "add",  # +
     "sub",  # -
     "floordiv",  # //
+    "mod",  # %
     "lt",  # <
     "le",  # <=
     "eq",  # ==
@@ -37,12 +37,12 @@ AnyUnitsOperator = Literal[
     "pow",  # **
     "matmul",  # @
     "truediv",  # /
-    "mod",  # %
 ]
 SameUnitsOperator = Literal[
     "add",  # +
     "sub",  # -
     "floordiv",  # //
+    "mod",  # %
     "lt",  # <
     "le",  # <=
     "eq",  # ==
@@ -128,11 +128,6 @@ def truediv(left: TDataArray, right: Any) -> TDataArray:
     return take(left, "truediv", right)
 
 
-def mod(left: TDataArray, right: Any) -> TDataArray:
-    """Perform ``(left) % (right)`` with units."""
-    return take(left, "mod", right)
-
-
 def add(left: TDataArray, right: Any) -> TDataArray:
     """Perform ``(left) + (right)`` with units."""
     return take(left, "add", right)
@@ -146,6 +141,11 @@ def sub(left: TDataArray, right: Any) -> TDataArray:
 def floordiv(left: TDataArray, right: Any) -> TDataArray:
     """Perform ``(left) // (right)`` with units."""
     return take(left, "floordiv", right)
+
+
+def mod(left: TDataArray, right: Any) -> TDataArray:
+    """Perform ``(left) % (right)`` with units."""
+    return take(left, "mod", right)
 
 
 def lt(left: TDataArray, right: Any) -> TDataArray:
