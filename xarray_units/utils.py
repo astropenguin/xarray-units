@@ -24,7 +24,7 @@ UnitsLike = Union[UnitBase, str]
 
 
 # constants
-TEST_DATA = 1
+TESTER = 1
 UNITS_ATTR = "units"
 
 

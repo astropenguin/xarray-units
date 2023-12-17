@@ -10,7 +10,7 @@ from typing import Any
 from astropy.units import Quantity
 from xarray import DataArray
 from .utils import (
-    TEST_DATA,
+    TESTER,
     UNITS_ATTR,
     Equivalencies,
     TDataArray,
@@ -52,7 +52,7 @@ def apply(
         return block.copy(data=data)
 
     try:
-        test = apply_any(TEST_DATA, units, method, *args, **kwargs)
+        test = apply_any(TESTER, units, method, *args, **kwargs)
     except Exception as error:
         raise UnitsApplicationError(error)
 

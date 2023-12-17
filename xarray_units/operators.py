@@ -21,14 +21,14 @@ __all__ = [
 
 # standard library
 import operator as opr
-from typing import Any, Literal, Optional, Union, get_args
+from typing import Any, Literal, Union, get_args
 
 
 # dependencies
 from astropy.units import Quantity
 from xarray import DataArray
-from xarray_units.quantity import set, to, unset
-from .utils import TDataArray, UnitsApplicationError, UnitsLike, units_of
+from xarray_units.quantity import apply_any, set, to, unset
+from .utils import TESTER, TDataArray, UnitsApplicationError, units_of
 
 
 # type hints
@@ -77,9 +77,11 @@ def take(left: TDataArray, operator: Operator, right: Any, /) -> TDataArray:
 
     try:
         if operator == "pow":
-            tested = take_any(1, left_units, operator, right, right_units)
+            args = (Quantity(right, right_units),)
         else:
-            tested = take_any(1, left_units, operator, 1, right_units)
+            args = (Quantity(TESTER, right_units),)
+
+        test = apply_any(TESTER, left_units, f"__{operator}__", *args)
     except Exception as error:
         raise UnitsApplicationError(error)
 
@@ -89,27 +91,15 @@ def take(left: TDataArray, operator: Operator, right: Any, /) -> TDataArray:
         elif isinstance(right, Quantity):
             right = right.to(left_units)  # type: ignore
 
-    result = getattr(opr, operator)(left, right)
+    try:
+        result = getattr(opr, operator)(left, right)
+    except Exception as error:
+        raise UnitsApplicationError(error)
 
-    if (units := units_of(tested)) is None:
+    if (units := units_of(test)) is None:
         return unset(result)
     else:
         return set(result, units, True)
-
-
-def take_any(
-    left: Any,
-    left_units: UnitsLike,
-    operator: Operator,
-    right: Any,
-    right_units: Optional[UnitsLike],
-    /,
-) -> Any:
-    """Perform an operation between two any datasets."""
-    left = Quantity(left, left_units)
-    right = Quantity(right, right_units)
-
-    return getattr(opr, operator)(left, right)
 
 
 def mul(left: TDataArray, right: Any) -> TDataArray:
