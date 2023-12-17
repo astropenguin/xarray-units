@@ -11,5 +11,5 @@ xarray extension for handling units
 ## Installation
 
 ```shell
-pip install xarray-units==0.1.0
+pip install xarray-units==0.2.0
 ```
