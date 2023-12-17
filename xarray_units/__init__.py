@@ -1,7 +1,8 @@
-__all__ = ["exceptions", "methods"]
-__version__ = "0.1.0"
+__all__ = ["operator", "quantity", "utils"]
+__version__ = "0.2.0"
 
 
 # submodules
-from . import exceptions
-from . import methods
+from . import operator
+from . import quantity
+from . import utils

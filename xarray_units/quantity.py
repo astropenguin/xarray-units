@@ -1,38 +1,38 @@
-__all__ = ["apply", "decompose", "like", "set", "to"]
+__all__ = ["apply", "decompose", "like", "set", "to", "unset"]
 
 
 # standard library
-from types import MethodType
-from typing import Any, Optional, TypeVar, Union, overload
+from types import MethodType, MethodWrapperType
+from typing import Any
 
 
 # dependencies
-from astropy.units import Equivalency, Quantity, Unit, UnitBase
-from xarray import DataArray, map_blocks
-from .exceptions import (
+from astropy.units import Quantity
+from xarray import DataArray
+from .utils import (
+    TESTER,
+    UNITS_ATTR,
+    Equivalencies,
+    TDataArray,
     UnitsApplicationError,
     UnitsExistError,
-    UnitsNotFoundError,
-    UnitsNotValidError,
+    UnitsLike,
+    units_of,
 )
 
 
-# type hints
-TDataArray = TypeVar("TDataArray", bound=DataArray)
-Equivalencies = Optional[Equivalency]
-UnitsLike = Union[UnitBase, str]
-
-
-# constants
-UNITS_ATTR = "units"
-
-
-def apply(da: TDataArray, name: str, /, *args: Any, **kwargs: Any) -> TDataArray:
+def apply(
+    da: TDataArray,
+    method: str,
+    /,
+    *args: Any,
+    **kwargs: Any,
+) -> TDataArray:
     """Apply a method of Astropy Quantity to a DataArray.
 
     Args:
         da: Input DataArray with units.
-        name: Method (or property) name of Astropy Quantity.
+        method: Method (or property) name of Astropy Quantity.
         *args: Positional arguments of the method.
         *kwargs: Keyword arguments of the method.
 
@@ -45,20 +45,40 @@ def apply(da: TDataArray, name: str, /, *args: Any, **kwargs: Any) -> TDataArray
         UnitsNotValidError: Raised if units are not valid.
 
     """
-    if (da_units := units_of(da)) is None:
-        raise UnitsNotFoundError(repr(da))
+    units = units_of(da, strict=True)
 
-    # test application
+    def per_block(block: TDataArray) -> TDataArray:
+        data = apply_any(block, units, method, *args, **kwargs)
+        return block.copy(data=data)
+
     try:
-        test = apply_any(1, da_units, name, *args, **kwargs)
+        test = apply_any(TESTER, units, method, *args, **kwargs)
     except Exception as error:
         raise UnitsApplicationError(error)
 
-    def per_block(block: TDataArray) -> TDataArray:
-        data = apply_any(block, da_units, name, *args, **kwargs)
-        return block.copy(data=data)
+    try:
+        result = da.map_blocks(per_block)
+    except Exception as error:
+        raise UnitsApplicationError(error)
 
-    return set(map_blocks(per_block, da), units_of(test), True)
+    return set(result, units_of(test, strict=True), overwrite=True)
+
+
+def apply_any(
+    data: Any,
+    units: UnitsLike,
+    method: str,
+    /,
+    *args: Any,
+    **kwargs: Any,
+) -> Any:
+    """Apply a method of Astropy Quantity to any data."""
+    attr = getattr(Quantity(data, units), method)
+
+    if isinstance(attr, (MethodType, MethodWrapperType)):
+        return attr(*args, **kwargs)
+    else:
+        return attr
 
 
 def decompose(da: TDataArray, /) -> TDataArray:
@@ -101,16 +121,14 @@ def like(
         UnitsNotValidError: Raised if units are not valid.
 
     """
-    if (units := units_of(other)) is None:
-        raise UnitsNotFoundError(repr(other))
-
-    return apply(da, "to", units, equivalencies)
+    return apply(da, "to", units_of(other, strict=True), equivalencies)
 
 
 def set(
     da: TDataArray,
     units: UnitsLike,
     /,
+    *,
     overwrite: bool = False,
 ) -> TDataArray:
     """Set units to a DataArray.
@@ -118,6 +136,8 @@ def set(
     Args:
         da: Input DataArray.
         units: Units to be set to the input.
+
+    Keyword Args:
         overwrite: Whether to overwrite existing units.
 
     Returns:
@@ -132,7 +152,7 @@ def set(
     if not overwrite and units_of(da) is not None:
         raise UnitsExistError(repr(da))
 
-    return da.assign_attrs(units=units)
+    return da.assign_attrs({UNITS_ATTR: units})
 
 
 def to(
@@ -160,59 +180,16 @@ def to(
     return apply(da, "to", units, equivalencies)
 
 
-# helper functions
-def apply_any(
-    data: Any,
-    units: UnitsLike,
-    name: str,
-    /,
-    *args: Any,
-    **kwargs: Any,
-) -> Quantity:
-    """Apply a method of Astropy Quantity to any data."""
-    data = Quantity(data, units)
+def unset(da: TDataArray, /) -> TDataArray:
+    """Remove units from a DataArray.
 
-    if isinstance(attr := getattr(data, name), MethodType):
-        return ensure_consistency(data, attr(*args, **kwargs))
-    else:
-        return ensure_consistency(data, attr)
+    Args:
+        da: Input DataArray.
 
+    Returns:
+        DataArray with units removed.
 
-def ensure_consistency(data_in: Any, data_out: Any, /) -> Quantity:
-    """Ensure consistency between input and output data."""
-    if not isinstance(data_in, Quantity):
-        raise TypeError("Input must be Astropy Quantity.")
-
-    if not isinstance(data_out, Quantity):
-        raise TypeError("Output must be Astropy Quantity.")
-
-    if data_out.shape != data_in.shape:
-        raise ValueError("Input and output shapes must be same.")
-
-    return data_out
-
-
-@overload
-def units_of(obj: Quantity) -> UnitBase:
-    ...
-
-
-@overload
-def units_of(obj: DataArray) -> Optional[UnitBase]:
-    ...
-
-
-def units_of(obj: Any) -> Any:
-    """Return units of an object if they exist and are valid."""
-    if isinstance(obj, Quantity):
-        if isinstance(units := obj.unit, UnitBase):
-            return units
-
-    if isinstance(obj, DataArray):
-        if (units := obj.attrs.get(UNITS_ATTR)) is None:
-            return None
-
-        if isinstance(units := Unit(units), UnitBase):  # type: ignore
-            return units
-
-    raise UnitsNotValidError(repr(obj))
+    """
+    da = da.copy(data=da.data)
+    da.attrs.pop(UNITS_ATTR, None)
+    return da

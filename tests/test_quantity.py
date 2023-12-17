@@ -3,7 +3,7 @@ import xarray as xr
 from astropy.constants import c  # type: ignore
 from astropy.units import spectral  # type: ignore
 from xarray.testing import assert_identical  # type: ignore
-from xarray_units.methods import apply, decompose, like, set, to
+from xarray_units.quantity import apply, decompose, like, set, to
 
 
 # test datasets
