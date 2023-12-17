@@ -2,13 +2,13 @@ __all__ = ["apply", "decompose", "like", "set", "to", "unset"]
 
 
 # standard library
-from types import MethodType
+from types import MethodType, MethodWrapperType
 from typing import Any
 
 
 # dependencies
 from astropy.units import Quantity
-from xarray import DataArray, map_blocks
+from xarray import DataArray
 from .utils import (
     UNITS_ATTR,
     Equivalencies,
@@ -46,16 +46,21 @@ def apply(
     """
     units = units_of(da, True)
 
-    try:
-        test = apply_any(1, units, name, *args, **kwargs)
-    except Exception as error:
-        raise UnitsApplicationError(error)
-
     def per_block(block: TDataArray) -> TDataArray:
         data = apply_any(block, units, name, *args, **kwargs)
         return block.copy(data=data)
 
-    return set(map_blocks(per_block, da), units_of(test), True)
+    try:
+        tested = apply_any(1, units, name, *args, **kwargs)
+    except Exception as error:
+        raise UnitsApplicationError(error)
+
+    try:
+        applied = da.map_blocks(per_block)
+    except Exception as error:
+        raise UnitsApplicationError(error)
+
+    return set(applied, units_of(tested, True), True)
 
 
 def apply_any(
@@ -65,28 +70,14 @@ def apply_any(
     /,
     *args: Any,
     **kwargs: Any,
-) -> Quantity:
+) -> Any:
     """Apply a method of Astropy Quantity to any data."""
-    data = Quantity(data, units)
+    attr = getattr(Quantity(data, units), name)
 
-    if isinstance(attr := getattr(data, name), MethodType):
-        return ensure_consistency(data, attr(*args, **kwargs))
+    if isinstance(attr, (MethodType, MethodWrapperType)):
+        return attr(*args, **kwargs)
     else:
-        return ensure_consistency(data, attr)
-
-
-def ensure_consistency(data_in: Any, data_out: Any, /) -> Quantity:
-    """Ensure consistency between input and output data."""
-    if not isinstance(data_in, Quantity):
-        raise TypeError("Input must be Astropy Quantity.")
-
-    if not isinstance(data_out, Quantity):
-        raise TypeError("Output must be Astropy Quantity.")
-
-    if data_out.shape != data_in.shape:
-        raise ValueError("Input and output shapes must be same.")
-
-    return data_out
+        return attr
 
 
 def decompose(da: TDataArray, /) -> TDataArray:
