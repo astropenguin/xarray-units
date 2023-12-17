@@ -10,6 +10,7 @@ from typing import Any
 from astropy.units import Quantity
 from xarray import DataArray
 from .utils import (
+    TEST_DATA,
     UNITS_ATTR,
     Equivalencies,
     TDataArray,
@@ -22,7 +23,7 @@ from .utils import (
 
 def apply(
     da: TDataArray,
-    name: str,
+    method: str,
     /,
     *args: Any,
     **kwargs: Any,
@@ -31,7 +32,7 @@ def apply(
 
     Args:
         da: Input DataArray with units.
-        name: Method (or property) name of Astropy Quantity.
+        method: Method (or property) name of Astropy Quantity.
         *args: Positional arguments of the method.
         *kwargs: Keyword arguments of the method.
 
@@ -47,32 +48,32 @@ def apply(
     units = units_of(da, strict=True)
 
     def per_block(block: TDataArray) -> TDataArray:
-        data = apply_any(block, units, name, *args, **kwargs)
+        data = apply_any(block, units, method, *args, **kwargs)
         return block.copy(data=data)
 
     try:
-        tested = apply_any(1, units, name, *args, **kwargs)
+        test = apply_any(TEST_DATA, units, method, *args, **kwargs)
     except Exception as error:
         raise UnitsApplicationError(error)
 
     try:
-        applied = da.map_blocks(per_block)
+        result = da.map_blocks(per_block)
     except Exception as error:
         raise UnitsApplicationError(error)
 
-    return set(applied, units_of(tested, strict=True), True)
+    return set(result, units_of(test, strict=True), True)
 
 
 def apply_any(
     data: Any,
     units: UnitsLike,
-    name: str,
+    method: str,
     /,
     *args: Any,
     **kwargs: Any,
 ) -> Any:
     """Apply a method of Astropy Quantity to any data."""
-    attr = getattr(Quantity(data, units), name)
+    attr = getattr(Quantity(data, units), method)
 
     if isinstance(attr, (MethodType, MethodWrapperType)):
         return attr(*args, **kwargs)

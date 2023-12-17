@@ -24,8 +24,8 @@ UnitsLike = Union[UnitBase, str]
 
 
 # constants
+TEST_DATA = 1
 UNITS_ATTR = "units"
-UNITS_ONE = "1"
 
 
 class UnitsError(Exception):
