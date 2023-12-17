@@ -69,7 +69,21 @@ def units_of(obj: Any, /, *, strict: Literal[True] = True) -> UnitBase:
 
 
 def units_of(obj: Any, /, *, strict: bool = False) -> Optional[UnitBase]:
-    """Return units of an object if they exist and are valid."""
+    """Return units of an object if they exist and are valid.
+
+    Args:
+        obj: Any object from which units are extracted.
+
+    Keyword Args:
+        strict: Whether to allow None as the return value.
+
+    Raises:
+        UnitsNotFoundError: Raised if ``strict`` is ``True``
+            but units do not exist in the object.
+        UnitsNotValidError: Raised if units exist in the object
+            but they cannot be parsed into ``UnitBase``.
+
+    """
     if isinstance(obj, Quantity):
         if isinstance(units := obj.unit, UnitBase):
             return units
