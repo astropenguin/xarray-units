@@ -4,7 +4,7 @@ message: "If you use this software, please cite it as below."
 title: "xarray-units"
 abstract: "xarray extension for handling units"
 version: 0.2.0
-date-released: 2023-12-11
+date-released: 2023-12-18
 license: "MIT"
 doi: "10.5281/zenodo.10354517"
 url: "https://github.com/astropenguin/xarray-units/"
