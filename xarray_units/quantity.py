@@ -44,7 +44,7 @@ def apply(
         UnitsNotValidError: Raised if units are not valid.
 
     """
-    units = units_of(da, True)
+    units = units_of(da, strict=True)
 
     def per_block(block: TDataArray) -> TDataArray:
         data = apply_any(block, units, name, *args, **kwargs)
@@ -60,7 +60,7 @@ def apply(
     except Exception as error:
         raise UnitsApplicationError(error)
 
-    return set(applied, units_of(tested, True), True)
+    return set(applied, units_of(tested, strict=True), True)
 
 
 def apply_any(
@@ -120,7 +120,8 @@ def like(
         UnitsNotValidError: Raised if units are not valid.
 
     """
-    return apply(da, "to", units_of(other, True), equivalencies)
+    units = units_of(other, strict=True)
+    return apply(da, "to", units, equivalencies)
 
 
 def set(

@@ -59,26 +59,16 @@ class UnitsNotValidError(UnitsError):
 
 
 @overload
-def units_of(obj: Quantity, /, strict: Literal[False] = False) -> UnitBase:
+def units_of(obj: Any, /, *, strict: Literal[False] = False) -> Optional[UnitBase]:
     ...
 
 
 @overload
-def units_of(obj: Quantity, /, strict: Literal[True] = True) -> UnitBase:
+def units_of(obj: Any, /, *, strict: Literal[True] = True) -> UnitBase:
     ...
 
 
-@overload
-def units_of(obj: Any, /, strict: Literal[False] = False) -> Optional[UnitBase]:
-    ...
-
-
-@overload
-def units_of(obj: Any, /, strict: Literal[True] = True) -> UnitBase:
-    ...
-
-
-def units_of(obj: Any, /, strict: bool = False) -> Optional[UnitBase]:
+def units_of(obj: Any, /, *, strict: bool = False) -> Optional[UnitBase]:
     """Return units of an object if they exist and are valid."""
     if isinstance(obj, Quantity):
         if isinstance(units := obj.unit, UnitBase):
