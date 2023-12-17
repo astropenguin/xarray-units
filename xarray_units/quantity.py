@@ -188,5 +188,5 @@ def unset(da: TDataArray, /) -> TDataArray:
 
     """
     da = da.copy(data=da.data)
-    da.attrs.pop(UNITS_ATTR)
+    da.attrs.pop(UNITS_ATTR, None)
     return da
