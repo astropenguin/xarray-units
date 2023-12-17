@@ -61,7 +61,7 @@ def apply(
     except Exception as error:
         raise UnitsApplicationError(error)
 
-    return set(result, units_of(test, strict=True), True)
+    return set(result, units_of(test, strict=True), overwrite=True)
 
 
 def apply_any(
@@ -121,14 +121,14 @@ def like(
         UnitsNotValidError: Raised if units are not valid.
 
     """
-    units = units_of(other, strict=True)
-    return apply(da, "to", units, equivalencies)
+    return apply(da, "to", units_of(other, strict=True), equivalencies)
 
 
 def set(
     da: TDataArray,
     units: UnitsLike,
     /,
+    *,
     overwrite: bool = False,
 ) -> TDataArray:
     """Set units to a DataArray.
@@ -136,6 +136,8 @@ def set(
     Args:
         da: Input DataArray.
         units: Units to be set to the input.
+
+    Keyword Args:
         overwrite: Whether to overwrite existing units.
 
     Returns:

@@ -99,7 +99,7 @@ def take(left: TDataArray, operator: Operator, right: Any, /) -> TDataArray:
     if (units := units_of(test)) is None:
         return unset(result)
     else:
-        return set(result, units, True)
+        return set(result, units, overwrite=True)
 
 
 def mul(left: TDataArray, right: Any) -> TDataArray:
