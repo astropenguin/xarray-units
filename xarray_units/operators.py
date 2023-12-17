@@ -19,27 +19,25 @@ __all__ = [
 
 # standard library
 import operator as opr
-from typing import Any, Literal, Union
+from typing import Any, Literal, Optional, Union, get_args
 
 
 # dependencies
 from astropy.units import Quantity
-from numpy import bool_
-from numpy.typing import NDArray
-from xarray import map_blocks
-from .methods import set
-from .utils import (
-    UNITS_ONE,
-    TDataArray,
-    UnitsApplicationError,
-    UnitsLike,
-    UnitsNotFoundError,
-    units_of,
-)
+from xarray import DataArray
+from xarray_units.quantity import set, to, unset
+from .utils import TDataArray, UnitsApplicationError, UnitsLike, units_of
 
 
 # type hints
-Operator = Literal[
+AnyUnitsOperator = Literal[
+    "mul",  # *
+    "pow",  # **
+    "matmul",  # @
+    "truediv",  # /
+    "mod",  # %
+]
+SameUnitsOperator = Literal[
     "lt",  # <
     "le",  # <=
     "eq",  # ==
@@ -48,20 +46,16 @@ Operator = Literal[
     "gt",  # >
     "add",  # +
     "sub",  # -
-    "mul",  # *
-    "pow",  # **
-    "matmul",  # @
-    "truediv",  # /
     "floordiv",  # //
-    "mod",  # %
 ]
+Operator = Union[AnyUnitsOperator, SameUnitsOperator]
 
 
 def take(left: TDataArray, operator: Operator, right: Any, /) -> TDataArray:
     """Perform an operation between a DataArray and any data with units.
 
     Args:
-        left: DataArray with units on the left side of the operator..
+        left: DataArray with units on the left side of the operator.
         operator: Name of the operator (e.g. ``"add"``, ``"gt"``).
         right: Any data on the right side of the operator.
 
@@ -76,28 +70,29 @@ def take(left: TDataArray, operator: Operator, right: Any, /) -> TDataArray:
         UnitsNotValidError: Raised if units are not valid.
 
     """
-    if (left_units := units_of(left)) is None:
-        raise UnitsNotFoundError(repr(left))
-
-    if (right_units := units_of(right)) is None:
-        right_units = UNITS_ONE
+    left_units = units_of(left, strict=True)
+    right_units = units_of(right)
 
     try:
         if operator == "pow":
-            test = take_any(1, left_units, operator, right, right_units)
+            tested = take_any(1, left_units, operator, right, right_units)
         else:
-            test = take_any(1, left_units, operator, 1, right_units)
+            tested = take_any(1, left_units, operator, 1, right_units)
     except Exception as error:
         raise UnitsApplicationError(error)
 
-    def per_block(left_: TDataArray, right_: Any) -> TDataArray:
-        data = take_any(left_, left_units, operator, right_, right_units)
-        return left.copy(data=data)
+    if operator in get_args(SameUnitsOperator):
+        if isinstance(right, DataArray):
+            right = to(right, left_units)
+        elif isinstance(right, Quantity):
+            right = right.to(left_units)  # type: ignore
 
-    if (units := units_of(test)) is None:
-        return map_blocks(per_block, left, (right,))
+    result = getattr(opr, operator)(left, right)
+
+    if (units := units_of(tested)) is None:
+        return unset(result)
     else:
-        return set(map_blocks(per_block, left, (right,)), units, True)
+        return set(result, units, True)
 
 
 def take_any(
@@ -105,12 +100,13 @@ def take_any(
     left_units: UnitsLike,
     operator: Operator,
     right: Any,
-    right_units: UnitsLike,
+    right_units: Optional[UnitsLike],
     /,
-) -> Union[Quantity, NDArray[bool_], bool_]:
+) -> Any:
     """Perform an operation between two any datasets."""
     left = Quantity(left, left_units)
     right = Quantity(right, right_units)
+
     return getattr(opr, operator)(left, right)
 
 
