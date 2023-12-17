@@ -75,21 +75,27 @@ def take(left: TDataArray, operator: Operator, right: Any, /) -> TDataArray:
     left_units = units_of(left, strict=True)
     right_units = units_of(right)
 
-    try:
-        if operator == "pow":
-            args = (Quantity(right, right_units),)
-        else:
-            args = (Quantity(TESTER, right_units),)
+    if operator == "pow":
+        method = f"__{operator}__"
+        args = (Quantity(right, right_units),)
+    elif operator == "matmul":
+        method = "__mul__"
+        args = (Quantity(TESTER, right_units),)
+    else:
+        method = f"__{operator}__"
+        args = (Quantity(TESTER, right_units),)
 
-        test = apply_any(TESTER, left_units, f"__{operator}__", *args)
+    try:
+        test = apply_any(TESTER, left_units, method, *args)
     except Exception as error:
         raise UnitsApplicationError(error)
 
     if operator in get_args(SameUnitsOperator):
+        if isinstance(right, Quantity):
+            right = right.to(left_units).value  # type: ignore
+
         if isinstance(right, DataArray):
             right = to(right, left_units)
-        elif isinstance(right, Quantity):
-            right = right.to(left_units)  # type: ignore
 
     try:
         result = getattr(opr, operator)(left, right)
