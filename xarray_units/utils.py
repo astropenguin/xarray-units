@@ -25,7 +25,7 @@ UnitsLike = Union[UnitBase, str]
 
 # constants
 TESTER = 1
-UNITS_ATTR = "units"
+UNITS = "units"
 
 
 class UnitsError(Exception):
@@ -75,7 +75,7 @@ def units_of(obj: Any, /, *, strict: bool = False) -> Optional[UnitBase]:
         obj: Any object from which units are extracted.
 
     Keyword Args:
-        strict: Whether to allow None as the return value.
+        strict: Whether to allow ``None`` as the return value.
 
     Raises:
         UnitsNotFoundError: Raised if ``strict`` is ``True``
@@ -91,7 +91,7 @@ def units_of(obj: Any, /, *, strict: bool = False) -> Optional[UnitBase]:
             raise UnitsNotValidError(repr(obj))
 
     if isinstance(obj, DataArray):
-        if (units := obj.attrs.get(UNITS_ATTR)) is not None:
+        if (units := obj.attrs.get(UNITS)) is not None:
             try:
                 units = Unit(units)  # type: ignore
             except Exception:
