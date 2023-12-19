@@ -9,6 +9,7 @@ from typing import Callable, Generic
 
 # dependencies
 from typing_extensions import Concatenate, ParamSpec
+from . import quantity
 from .utils import TDataArray
 
 
@@ -38,3 +39,11 @@ class Units(Generic[TDataArray]):
 
     accessed: TDataArray
     """DataArray to be accessed."""
+
+    # quantity
+    apply = to_method(quantity.apply)
+    decompose = to_method(quantity.decompose)
+    like = to_method(quantity.like)
+    set = to_method(quantity.set)
+    to = to_method(quantity.to)
+    unset = to_method(quantity.unset)
