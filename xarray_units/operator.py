@@ -73,7 +73,7 @@ def take(left: TDataArray, operator: Operator, right: Any, /) -> TDataArray:
 
     """
     left_units = units_of(left, strict=True)
-    right_units = units_of(right)
+    right_units = units_of(right, strict=False)
 
     if operator == "pow":
         method = f"__{operator}__"
@@ -112,70 +112,70 @@ def take(left: TDataArray, operator: Operator, right: Any, /) -> TDataArray:
 
 
 def mul(left: TDataArray, right: Any) -> TDataArray:
-    """Perform ``(left) * (right)`` with units."""
+    """Perform ``left * right`` with units."""
     return take(left, "mul", right)
 
 
 def pow(left: TDataArray, right: Any) -> TDataArray:
-    """Perform ``(left) ** (right)`` with units."""
+    """Perform ``left ** right`` with units."""
     return take(left, "pow", right)
 
 
 def matmul(left: TDataArray, right: Any) -> TDataArray:
-    """Perform ``(left) @ (right)`` with units."""
+    """Perform ``left @ right`` with units."""
     return take(left, "matmul", right)
 
 
 def truediv(left: TDataArray, right: Any) -> TDataArray:
-    """Perform ``(left) / (right)`` with units."""
+    """Perform ``left / right`` with units."""
     return take(left, "truediv", right)
 
 
 def add(left: TDataArray, right: Any) -> TDataArray:
-    """Perform ``(left) + (right)`` with units."""
+    """Perform ``left + right`` with units."""
     return take(left, "add", right)
 
 
 def sub(left: TDataArray, right: Any) -> TDataArray:
-    """Perform ``(left) - (right)`` with units."""
+    """Perform ``left - right`` with units."""
     return take(left, "sub", right)
 
 
 def floordiv(left: TDataArray, right: Any) -> TDataArray:
-    """Perform ``(left) // (right)`` with units."""
+    """Perform ``left // right`` with units."""
     return take(left, "floordiv", right)
 
 
 def mod(left: TDataArray, right: Any) -> TDataArray:
-    """Perform ``(left) % (right)`` with units."""
+    """Perform ``left % right`` with units."""
     return take(left, "mod", right)
 
 
 def lt(left: TDataArray, right: Any) -> TDataArray:
-    """Perform ``(left) < (right)`` with units."""
+    """Perform ``left < right`` with units."""
     return take(left, "lt", right)
 
 
 def le(left: TDataArray, right: Any) -> TDataArray:
-    """Perform ``(left) <= (right)`` with units."""
+    """Perform ``left <= right`` with units."""
     return take(left, "le", right)
 
 
 def eq(left: TDataArray, right: Any) -> TDataArray:
-    """Perform ``(left) == (right)`` with units."""
+    """Perform ``left == right`` with units."""
     return take(left, "eq", right)
 
 
 def ne(left: TDataArray, right: Any) -> TDataArray:
-    """Perform ``(left) != (right)`` with units."""
+    """Perform ``left != right`` with units."""
     return take(left, "ne", right)
 
 
 def ge(left: TDataArray, right: Any) -> TDataArray:
-    """Perform ``(left) >= (right)`` with units."""
+    """Perform ``left >= right`` with units."""
     return take(left, "ge", right)
 
 
 def gt(left: TDataArray, right: Any) -> TDataArray:
-    """Perform ``(left) > (right)`` with units."""
+    """Perform ``left > right`` with units."""
     return take(left, "gt", right)
