@@ -9,8 +9,9 @@ from typing import Callable, Generic
 
 # dependencies
 from typing_extensions import Concatenate, ParamSpec
+from xarray import register_dataarray_accessor  # type: ignore
 from . import operator, quantity
-from .utils import TDataArray
+from .utils import UNITS, TDataArray
 
 
 # type hints
@@ -33,6 +34,7 @@ def to_method(
     return wrapper
 
 
+@register_dataarray_accessor(UNITS)
 @dataclass
 class Units(Generic[TDataArray]):
     """DataArray accessor for handling units."""
