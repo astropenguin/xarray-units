@@ -11,7 +11,7 @@ from astropy.units import Quantity
 from xarray import DataArray
 from .utils import (
     TESTER,
-    UNITS_ATTR,
+    UNITS,
     Equivalencies,
     TDataArray,
     UnitsApplicationError,
@@ -152,7 +152,7 @@ def set(
     if not overwrite and units_of(da) is not None:
         raise UnitsExistError(repr(da))
 
-    return da.assign_attrs({UNITS_ATTR: units})
+    return da.assign_attrs({UNITS: units})
 
 
 def to(
@@ -191,5 +191,5 @@ def unset(da: TDataArray, /) -> TDataArray:
 
     """
     da = da.copy(data=da.data)
-    da.attrs.pop(UNITS_ATTR, None)
+    da.attrs.pop(UNITS, None)
     return da
