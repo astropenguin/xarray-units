@@ -42,7 +42,7 @@ class Units(Generic[TDataArray]):
     accessed: TDataArray
     """DataArray to be accessed."""
 
-    # quantity module
+    # quantity
     apply = to_method(quantity.apply)
     decompose = to_method(quantity.decompose)
     like = to_method(quantity.like)
@@ -50,7 +50,7 @@ class Units(Generic[TDataArray]):
     to = to_method(quantity.to)
     unset = to_method(quantity.unset)
 
-    # operator module
+    # operator
     take = to_method(operator.take)
     mul = to_method(operator.mul)
     pow = to_method(operator.pow)
