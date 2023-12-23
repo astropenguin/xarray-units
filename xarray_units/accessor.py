@@ -1,4 +1,4 @@
-__all__ = ["Units"]
+__all__ = ["Units", "units"]
 
 
 # standard library
@@ -32,6 +32,11 @@ def to_method(
         return func(units.accessed, *args, **kwargs)
 
     return wrapper
+
+
+def units(da: TDataArray, /) -> "Units[TDataArray]":
+    """Return a units accessor of a DataArray."""
+    return Units(da)
 
 
 @register_dataarray_accessor(UNITS)
