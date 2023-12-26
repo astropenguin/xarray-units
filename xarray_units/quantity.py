@@ -1,4 +1,12 @@
-__all__ = ["apply", "decompose", "like", "set", "to", "unset"]
+__all__ = [
+    "apply",
+    "decompose",
+    "format",
+    "like",
+    "set",
+    "to",
+    "unset",
+]
 
 
 # standard library
@@ -99,6 +107,34 @@ def decompose(da: TDataArray, /) -> TDataArray:
     return apply(da, "decompose")
 
 
+def format(
+    da: TDataArray,
+    format: str,
+    /,
+    **kwargs: Any,
+) -> TDataArray:
+    """Format units of a DataArray.
+
+    Args:
+        da: Input DataArray with units.
+        format: Format of units (e.g. ``"console"``, ``"latex"``).
+
+    Returns:
+        DataArray with formatted units.
+
+    Raises:
+        UnitsApplicationError: Raised if the application fails.
+        UnitsNotFoundError: Raised if units are not found.
+        UnitsNotValidError: Raised if units are not valid.
+
+    See Also:
+        https://docs.astropy.org/en/stable/units/format.html
+
+    """
+    units = units_of(da, format=format, strict=True, **kwargs)
+    return set(da, units, overwrite=True)
+
+
 def like(
     da: TDataArray,
     other: DataArray,
@@ -121,7 +157,8 @@ def like(
         UnitsNotValidError: Raised if units are not valid.
 
     """
-    return apply(da, "to", units_of(other, strict=True), equivalencies)
+    units = units_of(other, strict=True)
+    return apply(da, "to", units, equivalencies)
 
 
 def set(

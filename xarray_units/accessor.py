@@ -50,6 +50,7 @@ class Units(Generic[TDataArray]):
     # quantity
     apply = to_method(quantity.apply)
     decompose = to_method(quantity.decompose)
+    format = to_method(quantity.format)
     like = to_method(quantity.like)
     set = to_method(quantity.set)
     to = to_method(quantity.to)
