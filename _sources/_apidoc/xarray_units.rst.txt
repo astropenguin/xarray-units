@@ -1,0 +1,18 @@
+xarray\_units package
+=====================
+
+.. automodule:: xarray_units
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 2
+
+   xarray_units.accessor
+   xarray_units.operator
+   xarray_units.quantity
+   xarray_units.utils

@@ -1,0 +1,7 @@
+xarray\_units.accessor module
+=============================
+
+.. automodule:: xarray_units.accessor
+   :members:
+   :undoc-members:
+   :show-inheritance:
