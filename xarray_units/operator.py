@@ -27,7 +27,7 @@ from typing import Any, Literal, Union, get_args
 # dependencies
 from astropy.units import Quantity
 from xarray import DataArray
-from xarray_units.quantity import apply_any, set, to, unset
+from .quantity import apply_any, set, to, unset
 from .utils import TESTER, TDataArray, UnitsConversionError, units_of
 
 
