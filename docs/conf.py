@@ -5,13 +5,10 @@ copyright = "2023 Akio Taniguchi"
 
 # general configuration
 add_module_names = False
+autodoc_default_options = {"exclude-members": "DataArray"}
 autodoc_typehints = "both"
 autodoc_typehints_format = "short"
-exclude_patterns = [
-    "_build",
-    "Thumbs.db",
-    ".DS_Store",
-]
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 extensions = [
     "myst_parser",
     "sphinx.ext.autodoc",
