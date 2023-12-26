@@ -8,15 +8,13 @@ from typing import TYPE_CHECKING, Callable, Generic
 
 
 # dependencies
-from typing_extensions import Concatenate, ParamSpec, Self
+from typing_extensions import Concatenate, Self
 from xarray import DataArray, register_dataarray_accessor  # type: ignore
 from . import operator, quantity
-from .utils import UNITS, TDataArray
+from .utils import UNITS, P, TDataArray
 
 
 # type hints
-P = ParamSpec("P")
-
 if TYPE_CHECKING:
 
     class DataArray(DataArray):

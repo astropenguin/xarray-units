@@ -14,10 +14,12 @@ from typing import Any, Literal, Optional, TypeVar, Union, overload
 
 # dependencies
 from astropy.units import Equivalency, Quantity, Unit, UnitBase
+from typing_extensions import ParamSpec
 from xarray import DataArray
 
 
 # type hints
+P = ParamSpec("P")
 TDataArray = TypeVar("TDataArray", bound=DataArray)
 Equivalencies = Optional[Equivalency]
 UnitsLike = Union[UnitBase, str]
