@@ -1,21 +1,26 @@
-__all__ = ["Units", "units"]
+__all__ = ["DataArray", "Units", "units"]
 
 
 # standard library
 from dataclasses import dataclass
 from functools import wraps
-from typing import Callable, Generic
+from typing import TYPE_CHECKING, Callable, Generic
 
 
 # dependencies
-from typing_extensions import Concatenate, ParamSpec
-from xarray import register_dataarray_accessor  # type: ignore
+from typing_extensions import Concatenate, ParamSpec, Self
+from xarray import DataArray, register_dataarray_accessor  # type: ignore
 from . import operator, quantity
 from .utils import UNITS, TDataArray
 
 
 # type hints
 P = ParamSpec("P")
+
+if TYPE_CHECKING:
+
+    class DataArray(DataArray):
+        units: "Units[Self]"
 
 
 def to_method(
