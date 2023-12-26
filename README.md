@@ -124,7 +124,7 @@ Attributes:
     units:    km
 ```
 
-The units of the DataArray after the operation follows those of the DataArray with the accessor. Therefore, the resulting values will be different depending on the order of the operation. They are, of course, identical when considering units:
+The units of the DataArray after the operation follows those of the DataArray with the accessor. Therefore, the resulting data values will be different depending on the order of the operation. They are, of course, identical when considering units:
 
 ```python
 da_eq = da_sum_m.units == da_sum_km
