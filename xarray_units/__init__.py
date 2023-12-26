@@ -6,7 +6,6 @@ __all__ = [
     "utils",
     # aliases
     "DataArray",
-    "Units",
     "units",
 ]
 __version__ = "0.2.0"
@@ -20,4 +19,4 @@ from . import utils
 
 
 # aliases
-from .accessor import DataArray, Units, units
+from .accessor import DataArray, units
