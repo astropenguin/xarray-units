@@ -3,7 +3,7 @@ import xarray as xr
 from astropy.constants import c  # type: ignore
 from astropy.units import spectral  # type: ignore
 from xarray.testing import assert_identical  # type: ignore
-from xarray_units.quantity import apply, decompose, like, set, to
+from xarray_units.quantity import apply, decompose, format, like, set, to, unset
 
 
 # test datasets
@@ -23,6 +23,11 @@ def test_decompose() -> None:
     assert_identical(decompose(km), expected)
 
 
+def test_format() -> None:
+    expected = km.assign_attrs(units=r"$\mathrm{km}$")
+    assert_identical(format(km, "latex"), expected)
+
+
 def test_like() -> None:
     expected = (1e6 * km).assign_attrs(units="mm")
     assert_identical(like(km, mm), expected)
@@ -40,3 +45,7 @@ def test_to() -> None:
 def test_to_equivalencies() -> None:
     expected = (c / (1e3 * km)).assign_attrs(units="Hz")  # type: ignore
     assert_identical(to(km, "Hz", spectral()), expected)  # type: ignore
+
+
+def test_unset() -> None:
+    assert_identical(unset(km), xr.DataArray(km.data))

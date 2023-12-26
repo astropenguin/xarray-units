@@ -1,6 +1,6 @@
 __all__ = [
     "UnitsError",
-    "UnitsApplicationError",
+    "UnitsConversionError",
     "UnitsExistError",
     "UnitsNotFoundError",
     "UnitsNotValidError",
@@ -34,8 +34,8 @@ class UnitsError(Exception):
     pass
 
 
-class UnitsApplicationError(UnitsError):
-    """Units application is not successful."""
+class UnitsConversionError(UnitsError):
+    """Units conversion is not successful."""
 
     pass
 
@@ -59,36 +59,91 @@ class UnitsNotValidError(UnitsError):
 
 
 @overload
-def units_of(obj: Any, /, *, strict: Literal[False] = False) -> Optional[UnitBase]:
+def units_of(
+    obj: Any,
+    /,
+    *,
+    format: None = None,
+    strict: Literal[False] = False,
+) -> Optional[UnitBase]:
     ...
 
 
 @overload
-def units_of(obj: Any, /, *, strict: Literal[True] = True) -> UnitBase:
+def units_of(
+    obj: Any,
+    /,
+    *,
+    format: str,
+    strict: Literal[False] = False,
+) -> Optional[str]:
     ...
 
 
-def units_of(obj: Any, /, *, strict: bool = False) -> Optional[UnitBase]:
+@overload
+def units_of(
+    obj: Any,
+    /,
+    *,
+    format: None = None,
+    strict: Literal[True] = True,
+) -> UnitBase:
+    ...
+
+
+@overload
+def units_of(
+    obj: Any,
+    /,
+    *,
+    format: str,
+    strict: Literal[True] = True,
+) -> str:
+    ...
+
+
+def units_of(
+    obj: Any,
+    /,
+    *,
+    format: Optional[str] = None,
+    strict: bool = False,
+    **kwargs: Any,
+) -> Optional[UnitsLike]:
     """Return units of an object if they exist and are valid.
 
     Args:
         obj: Any object from which units are extracted.
 
     Keyword Args:
+        format: Format of units. If given, the return value
+            will be string. Otherwise, it will be ``UnitBase``.
         strict: Whether to allow ``None`` as the return value.
 
+    Returns:
+        Extracted units from the object.
+
     Raises:
+        UnitsConversionError: Raised if ``format`` is given
+            but units cannot be formatted to it.
         UnitsNotFoundError: Raised if ``strict`` is ``True``
             but units do not exist in the object.
         UnitsNotValidError: Raised if units exist in the object
-            but they cannot be parsed into ``UnitBase``.
+            but they cannot be converted to ``UnitBase``.
 
     """
+
     if isinstance(obj, Quantity):
-        if isinstance(units := obj.unit, UnitBase):
-            return units
-        else:
+        if not isinstance(units := obj.unit, UnitBase):
             raise UnitsNotValidError(repr(obj))
+
+        if format is None:
+            return units
+
+        try:
+            return units.to_string(format, **kwargs)  # type: ignore
+        except ValueError as error:
+            raise UnitsConversionError(error)
 
     if isinstance(obj, DataArray):
         if (units := obj.attrs.get(UNITS)) is not None:
@@ -97,10 +152,16 @@ def units_of(obj: Any, /, *, strict: bool = False) -> Optional[UnitBase]:
             except Exception:
                 raise UnitsNotValidError(repr(obj))
 
-            if isinstance(units, UnitBase):
-                return units
-            else:
+            if not isinstance(units, UnitBase):
                 raise UnitsNotValidError(repr(obj))
+
+            if format is None:
+                return units
+
+            try:
+                return units.to_string(format, **kwargs)  # type: ignore
+            except ValueError as error:
+                raise UnitsConversionError(error)
 
     if strict:
         raise UnitsNotFoundError(repr(obj))

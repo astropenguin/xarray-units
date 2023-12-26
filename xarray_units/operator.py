@@ -28,7 +28,7 @@ from typing import Any, Literal, Union, get_args
 from astropy.units import Quantity
 from xarray import DataArray
 from xarray_units.quantity import apply_any, set, to, unset
-from .utils import TESTER, TDataArray, UnitsApplicationError, units_of
+from .utils import TESTER, TDataArray, UnitsConversionError, units_of
 
 
 # type hints
@@ -67,7 +67,7 @@ def take(left: TDataArray, operator: Operator, right: Any, /) -> TDataArray:
         or nothing in a relational operation (e.g. ``"gt"``).
 
     Raises:
-        UnitsApplicationError: Raised if the application fails.
+        UnitsConversionError: Raised if units cannot be converted.
         UnitsNotFoundError: Raised if units are not found.
         UnitsNotValidError: Raised if units are not valid.
 
@@ -91,7 +91,7 @@ def take(left: TDataArray, operator: Operator, right: Any, /) -> TDataArray:
     try:
         test = apply_any(TESTER, left_units, method, *args)
     except Exception as error:
-        raise UnitsApplicationError(error)
+        raise UnitsConversionError(error)
 
     if operator in get_args(SameUnitsOperator):
         if isinstance(right, Quantity):
@@ -103,7 +103,7 @@ def take(left: TDataArray, operator: Operator, right: Any, /) -> TDataArray:
     try:
         result = getattr(opr, operator)(left, right)
     except Exception as error:
-        raise UnitsApplicationError(error)
+        raise UnitsConversionError(error)
 
     if (units := units_of(test)) is None:
         return unset(result)
