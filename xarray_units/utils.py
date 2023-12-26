@@ -1,6 +1,6 @@
 __all__ = [
     "UnitsError",
-    "UnitsApplicationError",
+    "UnitsConversionError",
     "UnitsExistError",
     "UnitsNotFoundError",
     "UnitsNotValidError",
@@ -34,8 +34,8 @@ class UnitsError(Exception):
     pass
 
 
-class UnitsApplicationError(UnitsError):
-    """Units application is not successful."""
+class UnitsConversionError(UnitsError):
+    """Units conversion is not successful."""
 
     pass
 
@@ -124,7 +124,7 @@ def units_of(
         Extracted units from the object.
 
     Raises:
-        UnitsApplicationError: Raised if ``format`` is given
+        UnitsConversionError: Raised if ``format`` is given
             but units cannot be formatted to it.
         UnitsNotFoundError: Raised if ``strict`` is ``True``
             but units do not exist in the object.
@@ -143,7 +143,7 @@ def units_of(
         try:
             return units.to_string(format, **kwargs)  # type: ignore
         except ValueError as error:
-            raise UnitsApplicationError(error)
+            raise UnitsConversionError(error)
 
     if isinstance(obj, DataArray):
         if (units := obj.attrs.get(UNITS)) is not None:
@@ -161,7 +161,7 @@ def units_of(
             try:
                 return units.to_string(format, **kwargs)  # type: ignore
             except ValueError as error:
-                raise UnitsApplicationError(error)
+                raise UnitsConversionError(error)
 
     if strict:
         raise UnitsNotFoundError(repr(obj))

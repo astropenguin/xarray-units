@@ -7,7 +7,7 @@ from astropy.units import Unit
 from pytest import mark, raises
 from xarray import DataArray
 from xarray_units.utils import (
-    UnitsApplicationError,
+    UnitsConversionError,
     UnitsNotFoundError,
     UnitsNotValidError,
     units_of,
@@ -32,10 +32,10 @@ data_units_of: list[tuple[Any, Any, Any, Any]] = [
     #
     (1 * Unit("m"), False, False, Unit("m")),
     (1 * Unit("m"), "generic", False, "m"),
-    (1 * Unit("m"), "invalid", False, UnitsApplicationError),
+    (1 * Unit("m"), "invalid", False, UnitsConversionError),
     (1 * Unit("m"), False, True, Unit("m")),
     (1 * Unit("m"), "generic", True, "m"),
-    (1 * Unit("m"), "invalid", True, UnitsApplicationError),
+    (1 * Unit("m"), "invalid", True, UnitsConversionError),
     #
     (DataArray(1), False, False, None),
     (DataArray(1), "generic", False, None),
@@ -46,10 +46,10 @@ data_units_of: list[tuple[Any, Any, Any, Any]] = [
     #
     (DataArray(1, attrs={"units": "m"}), False, False, Unit("m")),
     (DataArray(1, attrs={"units": "m"}), "generic", False, "m"),
-    (DataArray(1, attrs={"units": "m"}), "invalid", False, UnitsApplicationError),
+    (DataArray(1, attrs={"units": "m"}), "invalid", False, UnitsConversionError),
     (DataArray(1, attrs={"units": "m"}), False, True, Unit("m")),
     (DataArray(1, attrs={"units": "m"}), "generic", True, "m"),
-    (DataArray(1, attrs={"units": "m"}), "invalid", True, UnitsApplicationError),
+    (DataArray(1, attrs={"units": "m"}), "invalid", True, UnitsConversionError),
     #
     (DataArray(1, attrs={"units": "m, s"}), False, False, UnitsNotValidError),
     (DataArray(1, attrs={"units": "m, s"}), "generic", False, UnitsNotValidError),

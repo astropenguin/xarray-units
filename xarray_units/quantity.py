@@ -22,7 +22,7 @@ from .utils import (
     UNITS,
     Equivalencies,
     TDataArray,
-    UnitsApplicationError,
+    UnitsConversionError,
     UnitsExistError,
     UnitsLike,
     units_of,
@@ -48,7 +48,7 @@ def apply(
         DataArray with the method (or property) applied.
 
     Raises:
-        UnitsApplicationError: Raised if the application fails.
+        UnitsConversionError: Raised if units cannot be converted.
         UnitsNotFoundError: Raised if units are not found.
         UnitsNotValidError: Raised if units are not valid.
 
@@ -62,12 +62,12 @@ def apply(
     try:
         test = apply_any(TESTER, units, method, *args, **kwargs)
     except Exception as error:
-        raise UnitsApplicationError(error)
+        raise UnitsConversionError(error)
 
     try:
         result = da.map_blocks(per_block)
     except Exception as error:
-        raise UnitsApplicationError(error)
+        raise UnitsConversionError(error)
 
     return set(result, units_of(test, strict=True), overwrite=True)
 
@@ -99,7 +99,7 @@ def decompose(da: TDataArray, /) -> TDataArray:
         DataArray with the decomposed units.
 
     Raises:
-        UnitsApplicationError: Raised if the application fails.
+        UnitsConversionError: Raised if units cannot be converted.
         UnitsNotFoundError: Raised if units are not found.
         UnitsNotValidError: Raised if units are not valid.
 
@@ -123,7 +123,7 @@ def format(
         DataArray with formatted units.
 
     Raises:
-        UnitsApplicationError: Raised if the application fails.
+        UnitsConversionError: Raised if units cannot be converted.
         UnitsNotFoundError: Raised if units are not found.
         UnitsNotValidError: Raised if units are not valid.
 
@@ -152,7 +152,7 @@ def like(
         DataArray with the converted units.
 
     Raises:
-        UnitsApplicationError: Raised if the application fails.
+        UnitsConversionError: Raised if units cannot be converted.
         UnitsNotFoundError: Raised if units are not found.
         UnitsNotValidError: Raised if units are not valid.
 
@@ -209,7 +209,7 @@ def to(
         DataArray with the converted units.
 
     Raises:
-        UnitsApplicationError: Raised if the application fails.
+        UnitsConversionError: Raised if units cannot be converted.
         UnitsNotFoundError: Raised if units are not found.
         UnitsNotValidError: Raised if units are not valid.
 
