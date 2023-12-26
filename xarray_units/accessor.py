@@ -37,15 +37,28 @@ def to_method(
     return wrapper
 
 
-def units(da: TDataArray, /) -> "Units[TDataArray]":
-    """Return a units accessor of a DataArray."""
-    return Units(da)
+def units(accessed: TDataArray, /) -> "Units[TDataArray]":
+    """Return a units accessor of a DataArray.
+
+    Args:
+        da: DataArray to be accessed.
+
+    Returns:
+        Units accessor of the DataArray.
+
+    """
+    return Units(accessed)
 
 
 @register_dataarray_accessor(UNITS)
 @dataclass
 class Units(Generic[TDataArray]):
-    """DataArray accessor for handling units."""
+    """DataArray accessor for handling units.
+
+    Args:
+        accessed: DataArray to be accessed.
+
+    """
 
     accessed: TDataArray
     """DataArray to be accessed."""

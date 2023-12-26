@@ -119,8 +119,9 @@ def units_of(
 
     Keyword Args:
         format: Format of units. If given, the return value
-            will be string. Otherwise, it will be ``UnitBase``.
-        strict: Whether to allow ``None`` as the return value.
+            will be ``string``. Otherwise, it will be ``UnitBase``.
+        strict: Whether to allow ``None`` as the return value
+            when units do not exist in the object.
 
     Returns:
         Extracted units from the object.

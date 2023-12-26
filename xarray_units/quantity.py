@@ -52,6 +52,9 @@ def apply(
         UnitsNotFoundError: Raised if units are not found.
         UnitsNotValidError: Raised if units are not valid.
 
+    See Also:
+        https://docs.astropy.org/en/stable/units/quantity.html
+
     """
     units = units_of(da, strict=True)
 
@@ -102,6 +105,9 @@ def decompose(da: TDataArray, /) -> TDataArray:
         UnitsConversionError: Raised if units cannot be converted.
         UnitsNotFoundError: Raised if units are not found.
         UnitsNotValidError: Raised if units are not valid.
+
+    See Also:
+        https://docs.astropy.org/en/stable/units/decomposing_and_composing.html
 
     """
     return apply(da, "decompose")
@@ -155,6 +161,9 @@ def like(
         UnitsConversionError: Raised if units cannot be converted.
         UnitsNotFoundError: Raised if units are not found.
         UnitsNotValidError: Raised if units are not valid.
+
+    See Also:
+        https://docs.astropy.org/en/stable/units/quantity.html
 
     """
     units = units_of(other, strict=True)
@@ -212,6 +221,9 @@ def to(
         UnitsConversionError: Raised if units cannot be converted.
         UnitsNotFoundError: Raised if units are not found.
         UnitsNotValidError: Raised if units are not valid.
+
+    See Also:
+        https://docs.astropy.org/en/stable/units/quantity.html
 
     """
     return apply(da, "to", units, equivalencies)
