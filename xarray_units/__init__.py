@@ -1,11 +1,14 @@
 __all__ = [
+    # submodules
     "accessor",
     "operator",
     "quantity",
-    "units",
     "utils",
+    # aliases
+    "DataArray",
+    "units",
 ]
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 
 # submodules
@@ -16,4 +19,4 @@ from . import utils
 
 
 # aliases
-from .accessor import units
+from .accessor import DataArray, units

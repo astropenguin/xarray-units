@@ -14,10 +14,12 @@ from typing import Any, Literal, Optional, TypeVar, Union, overload
 
 # dependencies
 from astropy.units import Equivalency, Quantity, Unit, UnitBase
+from typing_extensions import ParamSpec
 from xarray import DataArray
 
 
 # type hints
+P = ParamSpec("P")
 TDataArray = TypeVar("TDataArray", bound=DataArray)
 Equivalencies = Optional[Equivalency]
 UnitsLike = Union[UnitBase, str]
@@ -117,8 +119,9 @@ def units_of(
 
     Keyword Args:
         format: Format of units. If given, the return value
-            will be string. Otherwise, it will be ``UnitBase``.
-        strict: Whether to allow ``None`` as the return value.
+            will be ``string``. Otherwise, it will be ``UnitBase``.
+        strict: Whether to allow ``None`` as the return value
+            when units do not exist in the object.
 
     Returns:
         Extracted units from the object.

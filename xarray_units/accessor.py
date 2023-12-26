@@ -1,21 +1,24 @@
-__all__ = ["Units", "units"]
+__all__ = ["DataArray", "Units", "units"]
 
 
 # standard library
 from dataclasses import dataclass
 from functools import wraps
-from typing import Callable, Generic
+from typing import TYPE_CHECKING, Callable, Generic
 
 
 # dependencies
-from typing_extensions import Concatenate, ParamSpec
-from xarray import register_dataarray_accessor  # type: ignore
+from typing_extensions import Concatenate, Self
+from xarray import DataArray, register_dataarray_accessor  # type: ignore
 from . import operator, quantity
-from .utils import UNITS, TDataArray
+from .utils import UNITS, P, TDataArray
 
 
 # type hints
-P = ParamSpec("P")
+if TYPE_CHECKING:
+
+    class DataArray(DataArray):
+        units: "Units[Self]"
 
 
 def to_method(
@@ -34,15 +37,28 @@ def to_method(
     return wrapper
 
 
-def units(da: TDataArray, /) -> "Units[TDataArray]":
-    """Return a units accessor of a DataArray."""
-    return Units(da)
+def units(accessed: TDataArray, /) -> "Units[TDataArray]":
+    """Return a units accessor of a DataArray.
+
+    Args:
+        da: DataArray to be accessed.
+
+    Returns:
+        Units accessor of the DataArray.
+
+    """
+    return Units(accessed)
 
 
 @register_dataarray_accessor(UNITS)
 @dataclass
 class Units(Generic[TDataArray]):
-    """DataArray accessor for handling units."""
+    """DataArray accessor for handling units.
+
+    Args:
+        accessed: DataArray to be accessed.
+
+    """
 
     accessed: TDataArray
     """DataArray to be accessed."""
