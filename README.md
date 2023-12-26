@@ -15,7 +15,7 @@ xarray-units is an import-only package that provides a DataArray accessor `.unit
 ## Installation
 
 ```shell
-pip install xarray-units==0.2.0
+pip install xarray-units==0.3.0
 ```
 
 ## Basic usages
