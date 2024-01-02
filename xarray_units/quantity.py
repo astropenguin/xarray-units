@@ -124,6 +124,7 @@ def format(
     Args:
         da: Input DataArray with units.
         format: Format of units (e.g. ``"console"``, ``"latex"``).
+        **kwargs: Keyword arguments of the formatting.
 
     Returns:
         DataArray with formatted units.
@@ -182,8 +183,6 @@ def set(
     Args:
         da: Input DataArray.
         units: Units to be set to the input.
-
-    Keyword Args:
         overwrite: Whether to overwrite existing units.
 
     Returns:

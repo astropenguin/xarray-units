@@ -67,6 +67,7 @@ def units_of(
     *,
     format: None = None,
     strict: Literal[False] = False,
+    **kwargs: Any,
 ) -> Optional[UnitBase]:
     ...
 
@@ -78,6 +79,7 @@ def units_of(
     *,
     format: str,
     strict: Literal[False] = False,
+    **kwargs: Any,
 ) -> Optional[str]:
     ...
 
@@ -89,6 +91,7 @@ def units_of(
     *,
     format: None = None,
     strict: Literal[True] = True,
+    **kwargs: Any,
 ) -> UnitBase:
     ...
 
@@ -100,6 +103,7 @@ def units_of(
     *,
     format: str,
     strict: Literal[True] = True,
+    **kwargs: Any,
 ) -> str:
     ...
 
@@ -116,12 +120,11 @@ def units_of(
 
     Args:
         obj: Any object from which units are extracted.
-
-    Keyword Args:
         format: Format of units. If given, the return value
             will be ``string``. Otherwise, it will be ``UnitBase``.
         strict: Whether to allow ``None`` as the return value
             when units do not exist in the object.
+        **kwargs: Keyword arguments of the formatting.
 
     Returns:
         Extracted units from the object.
