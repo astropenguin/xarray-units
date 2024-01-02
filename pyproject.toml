@@ -26,8 +26,9 @@ sphinx = "^7.2"
 
 [tool.pyright]
 typeCheckingMode = "strict"
-reportMissingTypeStubs = "warning"
 reportIncompatibleMethodOverride = "warning"
+reportMissingTypeStubs = "warning"
+reportUnnecessaryIsInstance = "warning"
 
 [build-system]
 requires = ["poetry-core"]

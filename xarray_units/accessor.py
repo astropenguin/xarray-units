@@ -2,7 +2,7 @@ __all__ = ["DataArray", "Units", "units"]
 
 
 # standard library
-from dataclasses import dataclass
+from dataclasses import dataclass, field, replace
 from functools import wraps
 from typing import TYPE_CHECKING, Callable, Generic
 
@@ -32,22 +32,32 @@ def to_method(
         *args: P.args,
         **kwargs: P.kwargs,
     ) -> TDataArray:
-        return func(units.accessed, *args, **kwargs)
+        result = func(units.accessed, *args, **kwargs)
+
+        if units.chain > 1:
+            return Units(result, chain=units.chain - 1)  # type: ignore
+
+        return result
 
     return wrapper
 
 
-def units(accessed: TDataArray, /) -> "Units[TDataArray]":
+def units(accessed: TDataArray, /, *, chain: int = 1) -> "Units[TDataArray]":
     """Return a units accessor of a DataArray.
 
     Args:
-        da: DataArray to be accessed.
+        accessed: DataArray to be accessed.
+        chain: Length of method chain. If it is greater than 1,
+            each accessor method (or operation) returns not the resulting
+            DataArray but an accessor of it with the length of ``chain - 1``.
+            Note that, while this simplifies the method chain notation,
+            static type checking may not work correctly in the middle of it.
 
     Returns:
         Units accessor of the DataArray.
 
     """
-    return Units(accessed)
+    return Units(accessed, chain=chain)
 
 
 @register_dataarray_accessor(UNITS)
@@ -57,11 +67,19 @@ class Units(Generic[TDataArray]):
 
     Args:
         accessed: DataArray to be accessed.
+        chain: Length of method chain. If it is greater than 1,
+            each accessor method (or operation) returns not the resulting
+            DataArray but an accessor of it with the length of ``chain - 1``.
+            Note that, while this simplifies the method chain notation,
+            static type checking may not work correctly in the middle of it.
 
     """
 
     accessed: TDataArray
     """DataArray to be accessed."""
+
+    chain: int = field(default=1, repr=False)
+    """Length of method chain."""
 
     # quantity
     apply = to_method(quantity.apply)
@@ -104,3 +122,12 @@ class Units(Generic[TDataArray]):
     __ne__ = ne  # type: ignore
     __ge__ = ge
     __gt__ = gt
+
+    def __call__(self, /, *, chain: int) -> Self:
+        """Update the arguments of the accessor."""
+        return replace(self, chain=chain)
+
+    def __post_init__(self) -> None:
+        """Validate the arguments of the accessor."""
+        if not (isinstance(self.chain, int) and self.chain > 0):
+            raise ValueError("Chain must be a positive integer.")
