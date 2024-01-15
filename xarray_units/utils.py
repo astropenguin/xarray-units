@@ -139,35 +139,31 @@ def units_of(
 
     """
 
-    if isinstance(obj, Quantity):
-        if not isinstance(units := obj.unit, UnitBase):
-            raise UnitsNotValidError(repr(obj))
-
-        if format is None:
-            return units
-
-        try:
-            return units.to_string(format, **kwargs)  # type: ignore
-        except ValueError as error:
-            raise UnitsConversionError(error)
-
     if isinstance(obj, DataArray):
-        if (units := obj.attrs.get(UNITS)) is not None:
-            try:
-                units = Unit(units)  # type: ignore
-            except Exception:
-                raise UnitsNotValidError(repr(obj))
+        units = obj.attrs.get(UNITS)
+    elif isinstance(obj, Quantity):
+        units = obj.unit
+    else:
+        units = None
 
-            if not isinstance(units, UnitBase):
-                raise UnitsNotValidError(repr(obj))
+    if units is None:
+        if not strict:
+            return None
 
-            if format is None:
-                return units
-
-            try:
-                return units.to_string(format, **kwargs)  # type: ignore
-            except ValueError as error:
-                raise UnitsConversionError(error)
-
-    if strict:
         raise UnitsNotFoundError(repr(obj))
+
+    try:
+        units = Unit(units)  # type: ignore
+    except Exception:
+        raise UnitsNotValidError(repr(obj))
+
+    if not isinstance(units, UnitBase):
+        raise UnitsNotValidError(repr(obj))
+
+    if format is None:
+        return units
+
+    try:
+        return units.to_string(format, **kwargs)  # type: ignore
+    except ValueError as error:
+        raise UnitsConversionError(error)
