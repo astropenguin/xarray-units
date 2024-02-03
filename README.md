@@ -98,6 +98,10 @@ Attributes:
     units:    GHz
 ```
 
+> [!TIPS]
+> There exist other accessor methods (e.g. `decompose`, `like`) for converting units.
+> See [the package guide](https://astropenguin.github.io/xarray-units/_apidoc/xarray_units.accessor.html) for more details.
+
 ### Numeric operations considering units
 
 xarray-units performs numerical operations considering units when the `units` accessor is attached to the DataArray on the left side of the operator:
@@ -146,6 +150,10 @@ Dimensions without coordinates: dim_0
 > Because this feature is accessor-based, units are only considered for the operation right after the `units` accessor.
 > See [method and operation chains](#method-and-operation-chains) for performing multiple operations at once.
 
+> [!TIPS]
+> There exist accessor methods corresponding to each operator (e.g. `add` → `+`, `eq` → `==`).
+> See [the package guide](https://astropenguin.github.io/xarray-units/_apidoc/xarray_units.accessor.html) for more details.
+
 ### Formatting units
 
 xarray-units converts units to [various string formats](https://docs.astropy.org/en/stable/units/format.html):
@@ -180,6 +188,9 @@ This is useful, for example, when plotting a DataArray:
 da.units.format("latex").plot()
 ```
 
+> [!NOTE]
+> By default, the units of the DataArray coordinates will also be formatted.
+
 ## Advanced usages
 
 ### Handling units of coordinates
@@ -213,7 +224,7 @@ Attributes:
     units:    m
 ```
 
-To handling the units of the coordinates, use an option `of` for specifying them:
+To handling the units of the DataArray coordinates, use an option `of` for specifying them:
 
 ```python
 da_km = da_m.units(of=["x", "y"]).to("km")
