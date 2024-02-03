@@ -68,8 +68,7 @@ def units_of(
     format: None = None,
     strict: Literal[False] = False,
     **kwargs: Any,
-) -> Optional[UnitBase]:
-    ...
+) -> Optional[UnitBase]: ...
 
 
 @overload
@@ -80,8 +79,7 @@ def units_of(
     format: str,
     strict: Literal[False] = False,
     **kwargs: Any,
-) -> Optional[str]:
-    ...
+) -> Optional[str]: ...
 
 
 @overload
@@ -92,8 +90,7 @@ def units_of(
     format: None = None,
     strict: Literal[True] = True,
     **kwargs: Any,
-) -> UnitBase:
-    ...
+) -> UnitBase: ...
 
 
 @overload
@@ -104,8 +101,7 @@ def units_of(
     format: str,
     strict: Literal[True] = True,
     **kwargs: Any,
-) -> str:
-    ...
+) -> str: ...
 
 
 def units_of(
