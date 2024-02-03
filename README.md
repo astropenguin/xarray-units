@@ -10,7 +10,7 @@ xarray extension for handling units
 
 ## Overview
 
-xarray-units is an import-only package that provides a DataArray accessor `.units` for handling units such as converting units and numeric operations considering units.
+xarray-units is an import-only package that provides a [xarray](https://xarray.dev) DataArray accessor `.units` for handling units such as converting units and numeric operations considering units.
 [Astropy](https://www.astropy.org) is used as a backend.
 Unlike similar implementations, xarray-units does not use a special data type to handle units, but uses the original data type in a DataArray.
 This allows to continue to use powerful features such as parallel and lazy processing with [Dask](https://www.dask.org) and/or user-defined DataArray subclasses.
@@ -182,9 +182,66 @@ da.units.format("latex").plot()
 
 ## Advanced usages
 
+### Handling units of coordinates
+
+The `units` accessor has an option for handling units of DataArray coordinates.
+For example, the following code will create a DataArray with `x` and `y` coordinates in units of meters:
+
+```python
+da_m = xr.DataArray([[1, 2], [3, 4]], dims=["x", "y"]).units.set("deg_C")
+da_m = da_m.assign_coords(
+    x=xr.DataArray([1000, 2000], dims="x").units.set("m"),
+    y=xr.DataArray([3000, 4000], dims="y").units.set("m"),
+)
+print(da_m.x)
+print(da_m.y)
+```
+
+```
+<xarray.DataArray 'x' (x: 2)>
+array([1000, 2000])
+Coordinates:
+  * x        (x) int64 1000 2000
+Attributes:
+    units:    m
+
+<xarray.DataArray 'y' (y: 2)>
+array([3000, 4000])
+Coordinates:
+  * y        (y) int64 3000 4000
+Attributes:
+    units:    m
+```
+
+To handling the units of the coordinates, use an option `of` for specifying them:
+
+```python
+da_km = da_m.units(of=["x", "y"]).to("km")
+print(da_km.x)
+print(da_km.y)
+```
+
+```
+<xarray.DataArray 'x' (x: 2)>
+array([1., 2.])
+Coordinates:
+  * x        (x) float64 1.0 2.0
+Attributes:
+    units:    km
+
+<xarray.DataArray 'y' (y: 2)>
+array([3., 4.])
+Coordinates:
+  * y        (y) float64 3.0 4.0
+Attributes:
+    units:    km
+```
+
+where `of` accepts the name(s) of the coordinate(s).
+
 ### Method and operation chains
 
-The `units` accessor has an option for chaining methods or operations while considering units:
+The `units` accessor has an option `chain` for chaining methods or operations while considering units:
 
 ```python
 da_m = xr.DataArray([1, 2, 3]).units.set("m")
