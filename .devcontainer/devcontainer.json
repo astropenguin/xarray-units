@@ -1,11 +1,14 @@
 {
     "name": "xarray-units",
-    "image":"python:3.12",
-    "onCreateCommand": "pip install poetry==1.7.1",
-    "postCreateCommand": "poetry install",
+    "image": "python:3.12",
+    "runArgs": [
+        "--name=xarray-units"
+    ],
     "containerEnv": {
         "POETRY_VIRTUALENVS_CREATE": "false"
     },
+    "onCreateCommand": "pip install poetry==1.7.1",
+    "postCreateCommand": "poetry install",
     "customizations": {
         "vscode": {
             "extensions": [
