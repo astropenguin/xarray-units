@@ -114,7 +114,7 @@ def take(left: TDataArray, operator: Operator, right: Any, /) -> TDataArray:
 def mul(left: TDataArray, right: Any) -> TDataArray:
     """Perform ``left * right`` considering units.
 
-    When called from an accessor, it does ``accessed * right``.
+    When called from an accessor, it runs ``accessed * right``.
 
     Args:
         left: DataArray with units on the left side of the operator.
@@ -135,7 +135,7 @@ def mul(left: TDataArray, right: Any) -> TDataArray:
 def pow(left: TDataArray, right: Any) -> TDataArray:
     """Perform ``left ** right`` considering units.
 
-    When called from an accessor, it does ``accessed ** right``.
+    When called from an accessor, it runs ``accessed ** right``.
 
     Args:
         left: DataArray with units on the left side of the operator.
@@ -156,7 +156,7 @@ def pow(left: TDataArray, right: Any) -> TDataArray:
 def matmul(left: TDataArray, right: Any) -> TDataArray:
     """Perform ``left @ right`` considering units.
 
-    When called from an accessor, it does ``accessed @ right``.
+    When called from an accessor, it runs ``accessed @ right``.
 
     Args:
         left: DataArray with units on the left side of the operator.
@@ -178,7 +178,7 @@ def matmul(left: TDataArray, right: Any) -> TDataArray:
 def truediv(left: TDataArray, right: Any) -> TDataArray:
     """Perform ``left / right`` considering units.
 
-    When called from an accessor, it does ``accessed / right``.
+    When called from an accessor, it runs ``accessed / right``.
 
     Args:
         left: DataArray with units on the left side of the operator.
@@ -199,7 +199,7 @@ def truediv(left: TDataArray, right: Any) -> TDataArray:
 def add(left: TDataArray, right: Any) -> TDataArray:
     """Perform ``left + right`` considering units.
 
-    When called from an accessor, it does ``accessed + right``.
+    When called from an accessor, it runs ``accessed + right``.
 
     Args:
         left: DataArray with units on the left side of the operator.
@@ -220,7 +220,7 @@ def add(left: TDataArray, right: Any) -> TDataArray:
 def sub(left: TDataArray, right: Any) -> TDataArray:
     """Perform ``left - right`` considering units.
 
-    When called from an accessor, it does ``accessed - right``.
+    When called from an accessor, it runs ``accessed - right``.
 
     Args:
         left: DataArray with units on the left side of the operator.
@@ -241,7 +241,7 @@ def sub(left: TDataArray, right: Any) -> TDataArray:
 def floordiv(left: TDataArray, right: Any) -> TDataArray:
     """Perform ``left // right`` considering units.
 
-    When called from an accessor, it does ``accessed // right``.
+    When called from an accessor, it runs ``accessed // right``.
 
     Args:
         left: DataArray with units on the left side of the operator.
@@ -262,7 +262,7 @@ def floordiv(left: TDataArray, right: Any) -> TDataArray:
 def mod(left: TDataArray, right: Any) -> TDataArray:
     """Perform ``left % right`` considering units.
 
-    When called from an accessor, it does ``accessed % right``.
+    When called from an accessor, it runs ``accessed % right``.
 
     Args:
         left: DataArray with units on the left side of the operator.
@@ -283,7 +283,7 @@ def mod(left: TDataArray, right: Any) -> TDataArray:
 def lt(left: TDataArray, right: Any) -> TDataArray:
     """Perform ``left < right`` considering units.
 
-    When called from an accessor, it does ``accessed < right``.
+    When called from an accessor, it runs ``accessed < right``.
 
     Args:
         left: DataArray with units on the left side of the operator.
@@ -304,7 +304,7 @@ def lt(left: TDataArray, right: Any) -> TDataArray:
 def le(left: TDataArray, right: Any) -> TDataArray:
     """Perform ``left <= right`` considering units.
 
-    When called from an accessor, it does ``accessed <= right``.
+    When called from an accessor, it runs ``accessed <= right``.
 
     Args:
         left: DataArray with units on the left side of the operator.
@@ -325,7 +325,7 @@ def le(left: TDataArray, right: Any) -> TDataArray:
 def eq(left: TDataArray, right: Any) -> TDataArray:
     """Perform ``left == right`` considering units.
 
-    When called from an accessor, it does ``accessed == right``.
+    When called from an accessor, it runs ``accessed == right``.
 
     Args:
         left: DataArray with units on the left side of the operator.
@@ -346,7 +346,7 @@ def eq(left: TDataArray, right: Any) -> TDataArray:
 def ne(left: TDataArray, right: Any) -> TDataArray:
     """Perform ``left != right`` considering units.
 
-    When called from an accessor, it does ``accessed != right``.
+    When called from an accessor, it runs ``accessed != right``.
 
     Args:
         left: DataArray with units on the left side of the operator.
@@ -367,7 +367,7 @@ def ne(left: TDataArray, right: Any) -> TDataArray:
 def ge(left: TDataArray, right: Any) -> TDataArray:
     """Perform ``left >= right`` considering units.
 
-    When called from an accessor, it does ``accessed >= right``.
+    When called from an accessor, it runs ``accessed >= right``.
 
     Args:
         left: DataArray with units on the left side of the operator.
@@ -388,7 +388,7 @@ def ge(left: TDataArray, right: Any) -> TDataArray:
 def gt(left: TDataArray, right: Any) -> TDataArray:
     """Perform ``left > right`` considering units.
 
-    When called from an accessor, it does ``accessed > right``.
+    When called from an accessor, it runs ``accessed > right``.
 
     Args:
         left: DataArray with units on the left side of the operator.

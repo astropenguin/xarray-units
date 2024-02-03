@@ -37,6 +37,8 @@ def apply(
 ) -> TDataArray:
     """Apply a method of Astropy Quantity to a DataArray.
 
+    When called from an accessor, it runs ``apply(accessed, method, ...)``.
+
     Args:
         da: Input DataArray with units.
         method: Method (or property) name of Astropy Quantity.
@@ -94,6 +96,8 @@ def apply_any(
 def decompose(da: TDataArray, /) -> TDataArray:
     """Convert a DataArray with units to decomposed ones.
 
+    When called from an accessor, it runs ``decompose(accessed)``.
+
     Args:
         da: Input DataArray with units.
 
@@ -120,6 +124,8 @@ def format(
     **kwargs: Any,
 ) -> TDataArray:
     """Format units of a DataArray.
+
+    When called from an accessor, it runs ``format(accessed, format, ...)``.
 
     Args:
         da: Input DataArray with units.
@@ -163,6 +169,8 @@ def like(
 ) -> TDataArray:
     """Convert a DataArray with units to those of the other.
 
+    When called from an accessor, it runs ``like(accessed, other, ...)``.
+
     Args:
         da: Input DataArray with units.
         other: DataArray with units to which the input is converted.
@@ -193,6 +201,8 @@ def set(
 ) -> TDataArray:
     """Set units to a DataArray.
 
+    When called from an accessor, it runs ``set(accessed, units, ...)``.
+
     Args:
         da: Input DataArray.
         units: Units to be set to the input.
@@ -221,6 +231,8 @@ def to(
 ) -> TDataArray:
     """Convert a DataArray with units to other units.
 
+    When called from an accessor, it runs ``to(accessed, units, ...)``.
+
     Args:
         da: Input DataArray with units.
         units: Units to which the input is converted.
@@ -243,6 +255,8 @@ def to(
 
 def unset(da: TDataArray, /) -> TDataArray:
     """Remove units from a DataArray.
+
+    When called from an accessor, it runs ``unset(accessed)``.
 
     Args:
         da: Input DataArray.
