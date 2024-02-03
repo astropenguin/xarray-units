@@ -11,16 +11,15 @@ __all__ = [
 
 # standard library
 from types import MethodType, MethodWrapperType
-from typing import Any
+from typing import Any, Optional
 
 
 # dependencies
-from astropy.units import Quantity
+from astropy.units import Equivalency, Quantity
 from xarray import DataArray
 from .utils import (
     TESTER,
     UNITS,
-    Equivalencies,
     TDataArray,
     UnitsConversionError,
     UnitsExistError,
@@ -37,6 +36,8 @@ def apply(
     **kwargs: Any,
 ) -> TDataArray:
     """Apply a method of Astropy Quantity to a DataArray.
+
+    When called from an accessor, it runs ``apply(accessed, method, ...)``.
 
     Args:
         da: Input DataArray with units.
@@ -95,6 +96,8 @@ def apply_any(
 def decompose(da: TDataArray, /) -> TDataArray:
     """Convert a DataArray with units to decomposed ones.
 
+    When called from an accessor, it runs ``decompose(accessed)``.
+
     Args:
         da: Input DataArray with units.
 
@@ -121,6 +124,8 @@ def format(
     **kwargs: Any,
 ) -> TDataArray:
     """Format units of a DataArray.
+
+    When called from an accessor, it runs ``format(accessed, format, ...)``.
 
     Args:
         da: Input DataArray with units.
@@ -160,9 +165,11 @@ def like(
     da: TDataArray,
     other: DataArray,
     /,
-    equivalencies: Equivalencies = None,
+    equivalencies: Optional[Equivalency] = None,
 ) -> TDataArray:
     """Convert a DataArray with units to those of the other.
+
+    When called from an accessor, it runs ``like(accessed, other, ...)``.
 
     Args:
         da: Input DataArray with units.
@@ -194,6 +201,8 @@ def set(
 ) -> TDataArray:
     """Set units to a DataArray.
 
+    When called from an accessor, it runs ``set(accessed, units, ...)``.
+
     Args:
         da: Input DataArray.
         units: Units to be set to the input.
@@ -218,9 +227,11 @@ def to(
     da: TDataArray,
     units: UnitsLike,
     /,
-    equivalencies: Equivalencies = None,
+    equivalencies: Optional[Equivalency] = None,
 ) -> TDataArray:
     """Convert a DataArray with units to other units.
+
+    When called from an accessor, it runs ``to(accessed, units, ...)``.
 
     Args:
         da: Input DataArray with units.
@@ -244,6 +255,8 @@ def to(
 
 def unset(da: TDataArray, /) -> TDataArray:
     """Remove units from a DataArray.
+
+    When called from an accessor, it runs ``unset(accessed)``.
 
     Args:
         da: Input DataArray.

@@ -2,9 +2,10 @@ __all__ = ["DataArray", "Units", "units"]
 
 
 # standard library
-from dataclasses import dataclass, field, replace
+from collections.abc import Hashable, Sequence
+from dataclasses import dataclass, replace
 from functools import wraps
-from typing import TYPE_CHECKING, Callable, Generic
+from typing import TYPE_CHECKING, Callable, Generic, Union
 
 
 # dependencies
@@ -32,32 +33,58 @@ def to_method(
         *args: P.args,
         **kwargs: P.kwargs,
     ) -> TDataArray:
-        result = func(units.accessed, *args, **kwargs)
+        if (of := units.of) is None:
+            da = func(units.accessed, *args, **kwargs)
+        else:
+            da = units.accessed
+            coords: dict[Hashable, DataArray]
 
-        if units.chain > 1:
-            return Units(result, chain=units.chain - 1)  # type: ignore
+            if isinstance(of, Hashable):
+                coords = {of: da.coords[of]}  # type: ignore
+            else:
+                coords = {name: da.coords[name] for name in of}  # type: ignore
 
-        return result
+            for name, coord in coords.items():
+                coord = func(coord, *args, **kwargs)  # type: ignore
+                da = da.assign_coords({name: coord})  # type: ignore
+
+        if (chain := units.chain) > 1:
+            return Units(da, chain=chain - 1, of=of)  # type: ignore
+
+        return da
 
     return wrapper
 
 
-def units(accessed: TDataArray, /, *, chain: int = 1) -> "Units[TDataArray]":
+def units(
+    accessed: TDataArray,
+    /,
+    *,
+    chain: int = 1,
+    of: Union[Sequence[Hashable], Hashable] = None,
+) -> "Units[TDataArray]":
     """Return a units accessor of a DataArray.
 
     Args:
         accessed: DataArray to be accessed.
         chain: Length of method chain. If it is greater than 1,
-            each accessor method (or operation) returns not the resulting
+            each accessor method (or operation) will return not the resulting
             DataArray but an accessor of it with the length of ``chain - 1``.
             Note that, while this simplifies the method chain notation,
             static type checking may not work correctly in the middle of it.
+        of: Coordinate(s) of the DataArray to be accessed. If specified,
+            each accessor method will be applied not to the DataArray itself
+            but to the selected coordinates, and return the DataArray with
+            the updated coordinates.
 
     Returns:
         Units accessor of the DataArray.
 
+    Raises:
+        TypeError: Raised if options of the accessor are not valid.
+
     """
-    return Units(accessed, chain=chain)
+    return Units(accessed, chain=chain, of=of)
 
 
 @register_dataarray_accessor(UNITS)
@@ -68,18 +95,28 @@ class Units(Generic[TDataArray]):
     Args:
         accessed: DataArray to be accessed.
         chain: Length of method chain. If it is greater than 1,
-            each accessor method (or operation) returns not the resulting
+            each accessor method (or operation) will return not the resulting
             DataArray but an accessor of it with the length of ``chain - 1``.
             Note that, while this simplifies the method chain notation,
             static type checking may not work correctly in the middle of it.
+        of: Coordinate(s) of the DataArray to be accessed. If specified,
+            each accessor method will be applied not to the DataArray itself
+            but to the selected coordinates, and return the DataArray with
+            the updated coordinates.
+
+        Raises:
+            TypeError: Raised if options of the accessor are not valid.
 
     """
 
     accessed: TDataArray
     """DataArray to be accessed."""
 
-    chain: int = field(default=1, repr=False)
+    chain: int = 1
     """Length of method chain."""
+
+    of: Union[Sequence[Hashable], Hashable] = None
+    """Coordinate(s) of the DataArray to be accessed."""
 
     # quantity
     apply = to_method(quantity.apply)
@@ -123,11 +160,40 @@ class Units(Generic[TDataArray]):
     __ge__ = ge
     __gt__ = gt
 
-    def __call__(self, /, *, chain: int) -> Self:
-        """Update the arguments of the accessor."""
-        return replace(self, chain=chain)
+    def __call__(
+        self,
+        /,
+        *,
+        chain: int = 1,
+        of: Union[Sequence[Hashable], Hashable] = None,
+    ) -> Self:
+        """Update the options of the accessor.
+
+        Args:
+            accessed: DataArray to be accessed.
+            chain: Length of method chain. If it is greater than 1,
+                each accessor method (or operation) will return not the resulting
+                DataArray but an accessor of it with the length of ``chain - 1``.
+                Note that, while this simplifies the method chain notation,
+                static type checking may not work correctly in the middle of it.
+            of: Coordinate(s) of the DataArray to be accessed. If specified,
+                each accessor method will be applied not to the DataArray itself
+                but to the selected coordinates, and return the DataArray with
+                the updated coordinates.
+
+        Returns:
+            Unit accessor with the updated options.
+
+        Raises:
+            TypeError: Raised if options of the accessor are not valid.
+
+        """
+        return replace(self, chain=chain, of=of)
 
     def __post_init__(self) -> None:
-        """Validate the arguments of the accessor."""
+        """Validate the options of the accessor."""
         if not (isinstance(self.chain, int) and self.chain > 0):
-            raise ValueError("Chain must be a positive integer.")
+            raise TypeError("Chain must be a positive integer.")
+
+        if not isinstance(self.of, (Hashable, Sequence)):
+            raise TypeError("Of must be a (sequence of) hashable.")

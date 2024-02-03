@@ -10,7 +10,7 @@ xarray extension for handling units
 
 ## Overview
 
-xarray-units is an import-only package that provides a DataArray accessor `.units` for handling units such as converting units and numeric operations considering units.
+xarray-units is an import-only package that provides a [xarray](https://xarray.dev) DataArray accessor `.units` for handling units such as converting units and numeric operations considering units.
 [Astropy](https://www.astropy.org) is used as a backend.
 Unlike similar implementations, xarray-units does not use a special data type to handle units, but uses the original data type in a DataArray.
 This allows to continue to use powerful features such as parallel and lazy processing with [Dask](https://www.dask.org) and/or user-defined DataArray subclasses.
@@ -18,7 +18,7 @@ This allows to continue to use powerful features such as parallel and lazy proce
 ## Installation
 
 ```shell
-pip install xarray-units==0.4.0
+pip install xarray-units==0.5.0
 ```
 
 ## Basic usages
@@ -98,6 +98,10 @@ Attributes:
     units:    GHz
 ```
 
+> [!TIPS]
+> There exist other accessor methods (e.g. `decompose`, `like`) for converting units.
+> See [the package guide](https://astropenguin.github.io/xarray-units/_apidoc/xarray_units.accessor.html) for more details.
+
 ### Numeric operations considering units
 
 xarray-units performs numerical operations considering units when the `units` accessor is attached to the DataArray on the left side of the operator:
@@ -146,6 +150,10 @@ Dimensions without coordinates: dim_0
 > Because this feature is accessor-based, units are only considered for the operation right after the `units` accessor.
 > See [method and operation chains](#method-and-operation-chains) for performing multiple operations at once.
 
+> [!TIPS]
+> There exist accessor methods corresponding to each operator (e.g. `add` → `+`, `eq` → `==`).
+> See [the package guide](https://astropenguin.github.io/xarray-units/_apidoc/xarray_units.accessor.html) for more details.
+
 ### Formatting units
 
 xarray-units converts units to [various string formats](https://docs.astropy.org/en/stable/units/format.html):
@@ -180,11 +188,71 @@ This is useful, for example, when plotting a DataArray:
 da.units.format("latex").plot()
 ```
 
+> [!NOTE]
+> By default, the units of the DataArray coordinates will also be formatted.
+
 ## Advanced usages
+
+### Handling units of coordinates
+
+The `units` accessor has an option for handling units of DataArray coordinates.
+For example, the following code will create a DataArray with `x` and `y` coordinates in units of meters:
+
+```python
+da_m = xr.DataArray([[1, 2], [3, 4]], dims=["x", "y"]).units.set("deg_C")
+da_m = da_m.assign_coords(
+    x=xr.DataArray([1000, 2000], dims="x").units.set("m"),
+    y=xr.DataArray([3000, 4000], dims="y").units.set("m"),
+)
+print(da_m.x)
+print(da_m.y)
+```
+
+```
+<xarray.DataArray 'x' (x: 2)>
+array([1000, 2000])
+Coordinates:
+  * x        (x) int64 1000 2000
+Attributes:
+    units:    m
+
+<xarray.DataArray 'y' (y: 2)>
+array([3000, 4000])
+Coordinates:
+  * y        (y) int64 3000 4000
+Attributes:
+    units:    m
+```
+
+To handling the units of the DataArray coordinates, use an option `of` for specifying them:
+
+```python
+da_km = da_m.units(of=["x", "y"]).to("km")
+print(da_km.x)
+print(da_km.y)
+```
+
+```
+<xarray.DataArray 'x' (x: 2)>
+array([1., 2.])
+Coordinates:
+  * x        (x) float64 1.0 2.0
+Attributes:
+    units:    km
+
+<xarray.DataArray 'y' (y: 2)>
+array([3., 4.])
+Coordinates:
+  * y        (y) float64 3.0 4.0
+Attributes:
+    units:    km
+```
+
+where `of` accepts the name(s) of the coordinate(s).
 
 ### Method and operation chains
 
-The `units` accessor has an option for chaining methods or operations while considering units:
+The `units` accessor has an option `chain` for chaining methods or operations while considering units:
 
 ```python
 da_m = xr.DataArray([1, 2, 3]).units.set("m")
