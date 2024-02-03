@@ -53,3 +53,16 @@ def test_chain() -> None:
     s = DataArray([1, 2, 3]).units.set("s")
     expected = (1 / DataArray([1, 2, 3])).units.set("m / s2")
     assert_identical(m.units(chain=2) / s / s, expected)
+
+
+def test_of() -> None:
+    s = DataArray([[1, 2], [3, 4]], dims=["x", "y"]).units.set("s")
+    s = s.assign_coords(  # type: ignore
+        x=DataArray([1000, 2000], dims="x").units.set("m"),
+        y=DataArray([3000, 4000], dims="y").units.set("m"),
+    )
+    expected = s.assign_coords(  # type: ignore
+        x=DataArray([1, 2], dims="x").units.set("km"),
+        y=DataArray([3, 4], dims="y").units.set("km"),
+    )
+    assert_identical(s.units(of=["x", "y"]).to("km"), expected)
