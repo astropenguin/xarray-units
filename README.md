@@ -18,7 +18,7 @@ This allows to continue to use powerful features such as parallel and lazy proce
 ## Installation
 
 ```shell
-pip install xarray-units==0.4.0
+pip install xarray-units==0.5.0
 ```
 
 ## Basic usages
