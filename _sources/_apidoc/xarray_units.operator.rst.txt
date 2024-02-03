@@ -1,0 +1,7 @@
+xarray\_units.operator module
+=============================
+
+.. automodule:: xarray_units.operator
+   :members:
+   :undoc-members:
+   :show-inheritance:

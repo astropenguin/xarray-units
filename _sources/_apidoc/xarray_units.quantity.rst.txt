@@ -1,0 +1,7 @@
+xarray\_units.quantity module
+=============================
+
+.. automodule:: xarray_units.quantity
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,630 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>xarray_units.accessor &#8212; Python  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/xarray_units/accessor';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">xarray-units</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../index.html">
+                        Home
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../_apidoc/xarray_units.html">
+                        Package guide
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/astropenguin/xarray-units/" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+</div>
+
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item">
+<nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../index.html">
+                        Home
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../_apidoc/xarray_units.html">
+                        Package guide
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/astropenguin/xarray-units/" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">xarray_units...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <h1>Source code for xarray_units.accessor</h1><div class="highlight"><pre>
+<span></span><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;DataArray&quot;</span><span class="p">,</span> <span class="s2">&quot;Units&quot;</span><span class="p">,</span> <span class="s2">&quot;units&quot;</span><span class="p">]</span>
+
+
+<span class="c1"># standard library</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Hashable</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">replace</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">Union</span>
+
+
+<span class="c1"># dependencies</span>
+<span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">Concatenate</span><span class="p">,</span> <span class="n">Self</span>
+<span class="kn">from</span> <span class="nn">xarray</span> <span class="kn">import</span> <span class="n">DataArray</span><span class="p">,</span> <span class="n">register_dataarray_accessor</span>  <span class="c1"># type: ignore</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">operator</span><span class="p">,</span> <span class="n">quantity</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">UNITS</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">TDataArray</span>
+
+
+<span class="c1"># type hints</span>
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+
+    <span class="k">class</span> <span class="nc">DataArray</span><span class="p">(</span><span class="n">DataArray</span><span class="p">):</span>
+        <span class="n">units</span><span class="p">:</span> <span class="s2">&quot;Units[Self]&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">to_method</span><span class="p">(</span>
+    <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">TDataArray</span><span class="p">,</span> <span class="n">P</span><span class="p">],</span> <span class="n">TDataArray</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="s2">&quot;Units[TDataArray]&quot;</span><span class="p">,</span> <span class="n">P</span><span class="p">],</span> <span class="n">TDataArray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert an operator or quantity function to a method.&quot;&quot;&quot;</span>
+
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span>
+        <span class="n">units</span><span class="p">:</span> <span class="s2">&quot;Units[TDataArray]&quot;</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TDataArray</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">of</span> <span class="o">:=</span> <span class="n">units</span><span class="o">.</span><span class="n">of</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">da</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">units</span><span class="o">.</span><span class="n">accessed</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">da</span> <span class="o">=</span> <span class="n">units</span><span class="o">.</span><span class="n">accessed</span>
+            <span class="n">coords</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Hashable</span><span class="p">,</span> <span class="n">DataArray</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">of</span><span class="p">,</span> <span class="n">Hashable</span><span class="p">):</span>
+                <span class="n">coords</span> <span class="o">=</span> <span class="p">{</span><span class="n">of</span><span class="p">:</span> <span class="n">da</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="n">of</span><span class="p">]}</span>  <span class="c1"># type: ignore</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">coords</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">da</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">of</span><span class="p">}</span>  <span class="c1"># type: ignore</span>
+
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">coord</span> <span class="ow">in</span> <span class="n">coords</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">coord</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">coord</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+                <span class="n">da</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">assign_coords</span><span class="p">({</span><span class="n">name</span><span class="p">:</span> <span class="n">coord</span><span class="p">})</span>  <span class="c1"># type: ignore</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">chain</span> <span class="o">:=</span> <span class="n">units</span><span class="o">.</span><span class="n">chain</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Units</span><span class="p">(</span><span class="n">da</span><span class="p">,</span> <span class="n">chain</span><span class="o">=</span><span class="n">chain</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">of</span><span class="o">=</span><span class="n">of</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+        <span class="k">return</span> <span class="n">da</span>
+
+    <span class="k">return</span> <span class="n">wrapper</span>
+
+
+<div class="viewcode-block" id="units">
+<a class="viewcode-back" href="../../_apidoc/xarray_units.accessor.html#xarray_units.units">[docs]</a>
+<span class="k">def</span> <span class="nf">units</span><span class="p">(</span>
+    <span class="n">accessed</span><span class="p">:</span> <span class="n">TDataArray</span><span class="p">,</span>
+    <span class="o">/</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">chain</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">of</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Hashable</span><span class="p">],</span> <span class="n">Hashable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Units[TDataArray]&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a units accessor of a DataArray.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        accessed: DataArray to be accessed.</span>
+<span class="sd">        chain: Length of method chain. If it is greater than 1,</span>
+<span class="sd">            each accessor method (or operation) will return not the resulting</span>
+<span class="sd">            DataArray but an accessor of it with the length of ``chain - 1``.</span>
+<span class="sd">            Note that, while this simplifies the method chain notation,</span>
+<span class="sd">            static type checking may not work correctly in the middle of it.</span>
+<span class="sd">        of: Coordinate(s) of the DataArray to be accessed. If specified,</span>
+<span class="sd">            each accessor method will be applied not to the DataArray itself</span>
+<span class="sd">            but to the selected coordinates, and return the DataArray with</span>
+<span class="sd">            the updated coordinates.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Units accessor of the DataArray.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        TypeError: Raised if options of the accessor are not valid.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Units</span><span class="p">(</span><span class="n">accessed</span><span class="p">,</span> <span class="n">chain</span><span class="o">=</span><span class="n">chain</span><span class="p">,</span> <span class="n">of</span><span class="o">=</span><span class="n">of</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Units">
+<a class="viewcode-back" href="../../_apidoc/xarray_units.accessor.html#xarray_units.Units">[docs]</a>
+<span class="nd">@register_dataarray_accessor</span><span class="p">(</span><span class="n">UNITS</span><span class="p">)</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Units</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">TDataArray</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;DataArray accessor for handling units.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        accessed: DataArray to be accessed.</span>
+<span class="sd">        chain: Length of method chain. If it is greater than 1,</span>
+<span class="sd">            each accessor method (or operation) will return not the resulting</span>
+<span class="sd">            DataArray but an accessor of it with the length of ``chain - 1``.</span>
+<span class="sd">            Note that, while this simplifies the method chain notation,</span>
+<span class="sd">            static type checking may not work correctly in the middle of it.</span>
+<span class="sd">        of: Coordinate(s) of the DataArray to be accessed. If specified,</span>
+<span class="sd">            each accessor method will be applied not to the DataArray itself</span>
+<span class="sd">            but to the selected coordinates, and return the DataArray with</span>
+<span class="sd">            the updated coordinates.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: Raised if options of the accessor are not valid.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">accessed</span><span class="p">:</span> <span class="n">TDataArray</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;DataArray to be accessed.&quot;&quot;&quot;</span>
+
+    <span class="n">chain</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Length of method chain.&quot;&quot;&quot;</span>
+
+    <span class="n">of</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Hashable</span><span class="p">],</span> <span class="n">Hashable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Coordinate(s) of the DataArray to be accessed.&quot;&quot;&quot;</span>
+
+    <span class="c1"># quantity</span>
+    <span class="n">apply</span> <span class="o">=</span> <span class="n">to_method</span><span class="p">(</span><span class="n">quantity</span><span class="o">.</span><span class="n">apply</span><span class="p">)</span>
+    <span class="n">decompose</span> <span class="o">=</span> <span class="n">to_method</span><span class="p">(</span><span class="n">quantity</span><span class="o">.</span><span class="n">decompose</span><span class="p">)</span>
+    <span class="nb">format</span> <span class="o">=</span> <span class="n">to_method</span><span class="p">(</span><span class="n">quantity</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
+    <span class="n">like</span> <span class="o">=</span> <span class="n">to_method</span><span class="p">(</span><span class="n">quantity</span><span class="o">.</span><span class="n">like</span><span class="p">)</span>
+    <span class="nb">set</span> <span class="o">=</span> <span class="n">to_method</span><span class="p">(</span><span class="n">quantity</span><span class="o">.</span><span class="n">set</span><span class="p">)</span>
+    <span class="n">to</span> <span class="o">=</span> <span class="n">to_method</span><span class="p">(</span><span class="n">quantity</span><span class="o">.</span><span class="n">to</span><span class="p">)</span>
+    <span class="n">unset</span> <span class="o">=</span> <span class="n">to_method</span><span class="p">(</span><span class="n">quantity</span><span class="o">.</span><span class="n">unset</span><span class="p">)</span>
+
+    <span class="c1"># operator</span>
+    <span class="n">take</span> <span class="o">=</span> <span class="n">to_method</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">take</span><span class="p">)</span>
+    <span class="n">mul</span> <span class="o">=</span> <span class="n">to_method</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">mul</span><span class="p">)</span>
+    <span class="nb">pow</span> <span class="o">=</span> <span class="n">to_method</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">pow</span><span class="p">)</span>
+    <span class="n">matmul</span> <span class="o">=</span> <span class="n">to_method</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">matmul</span><span class="p">)</span>
+    <span class="n">truediv</span> <span class="o">=</span> <span class="n">to_method</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">truediv</span><span class="p">)</span>
+    <span class="n">add</span> <span class="o">=</span> <span class="n">to_method</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">add</span><span class="p">)</span>
+    <span class="n">sub</span> <span class="o">=</span> <span class="n">to_method</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">sub</span><span class="p">)</span>
+    <span class="n">floordiv</span> <span class="o">=</span> <span class="n">to_method</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">floordiv</span><span class="p">)</span>
+    <span class="n">mod</span> <span class="o">=</span> <span class="n">to_method</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">mod</span><span class="p">)</span>
+    <span class="n">lt</span> <span class="o">=</span> <span class="n">to_method</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">lt</span><span class="p">)</span>
+    <span class="n">le</span> <span class="o">=</span> <span class="n">to_method</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">le</span><span class="p">)</span>
+    <span class="n">eq</span> <span class="o">=</span> <span class="n">to_method</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">eq</span><span class="p">)</span>
+    <span class="n">ne</span> <span class="o">=</span> <span class="n">to_method</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">ne</span><span class="p">)</span>
+    <span class="n">ge</span> <span class="o">=</span> <span class="n">to_method</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">ge</span><span class="p">)</span>
+    <span class="n">gt</span> <span class="o">=</span> <span class="n">to_method</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">gt</span><span class="p">)</span>
+
+    <span class="c1"># aliases</span>
+    <span class="fm">__mul__</span> <span class="o">=</span> <span class="n">mul</span>
+    <span class="fm">__pow__</span> <span class="o">=</span> <span class="nb">pow</span>
+    <span class="fm">__matmul__</span> <span class="o">=</span> <span class="n">matmul</span>
+    <span class="fm">__truediv__</span> <span class="o">=</span> <span class="n">truediv</span>
+    <span class="fm">__add__</span> <span class="o">=</span> <span class="n">add</span>
+    <span class="fm">__sub__</span> <span class="o">=</span> <span class="n">sub</span>
+    <span class="fm">__floordiv__</span> <span class="o">=</span> <span class="n">floordiv</span>
+    <span class="fm">__mod__</span> <span class="o">=</span> <span class="n">mod</span>
+    <span class="fm">__lt__</span> <span class="o">=</span> <span class="n">lt</span>
+    <span class="fm">__le__</span> <span class="o">=</span> <span class="n">le</span>
+    <span class="fm">__eq__</span> <span class="o">=</span> <span class="n">eq</span>  <span class="c1"># type: ignore</span>
+    <span class="fm">__ne__</span> <span class="o">=</span> <span class="n">ne</span>  <span class="c1"># type: ignore</span>
+    <span class="fm">__ge__</span> <span class="o">=</span> <span class="n">ge</span>
+    <span class="fm">__gt__</span> <span class="o">=</span> <span class="n">gt</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">/</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">chain</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">of</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Hashable</span><span class="p">],</span> <span class="n">Hashable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the options of the accessor.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            accessed: DataArray to be accessed.</span>
+<span class="sd">            chain: Length of method chain. If it is greater than 1,</span>
+<span class="sd">                each accessor method (or operation) will return not the resulting</span>
+<span class="sd">                DataArray but an accessor of it with the length of ``chain - 1``.</span>
+<span class="sd">                Note that, while this simplifies the method chain notation,</span>
+<span class="sd">                static type checking may not work correctly in the middle of it.</span>
+<span class="sd">            of: Coordinate(s) of the DataArray to be accessed. If specified,</span>
+<span class="sd">                each accessor method will be applied not to the DataArray itself</span>
+<span class="sd">                but to the selected coordinates, and return the DataArray with</span>
+<span class="sd">                the updated coordinates.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Unit accessor with the updated options.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: Raised if options of the accessor are not valid.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">replace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chain</span><span class="o">=</span><span class="n">chain</span><span class="p">,</span> <span class="n">of</span><span class="o">=</span><span class="n">of</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate the options of the accessor.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chain</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">chain</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Chain must be a positive integer.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">of</span><span class="p">,</span> <span class="p">(</span><span class="n">Hashable</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Of must be a (sequence of) hashable.&quot;</span><span class="p">)</span></div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023-2024 Akio Taniguchi.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.14.4.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
