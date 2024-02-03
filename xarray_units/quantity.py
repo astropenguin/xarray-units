@@ -25,7 +25,7 @@ from .utils import (
     UnitsConversionError,
     UnitsExistError,
     UnitsLike,
-    units_of,
+    unitsof,
 )
 
 
@@ -56,7 +56,7 @@ def apply(
         https://docs.astropy.org/en/stable/units/quantity.html
 
     """
-    units = units_of(da, strict=True)
+    units = unitsof(da, strict=True)
 
     def per_block(block: TDataArray) -> TDataArray:
         data = apply_any(block, units, method, *args, **kwargs)
@@ -72,7 +72,7 @@ def apply(
     except Exception as error:
         raise UnitsConversionError(error)
 
-    return set(result, units_of(test, strict=True), overwrite=True)
+    return set(result, unitsof(test, strict=True), overwrite=True)
 
 
 def apply_any(
@@ -138,7 +138,7 @@ def format(
         https://docs.astropy.org/en/stable/units/format.html
 
     """
-    units = units_of(da, format=format, strict=True, **kwargs)
+    units = unitsof(da, format=format, strict=True, **kwargs)
     return set(da, units, overwrite=True)
 
 
@@ -167,7 +167,7 @@ def like(
         https://docs.astropy.org/en/stable/units/quantity.html
 
     """
-    units = units_of(other, strict=True)
+    units = unitsof(other, strict=True)
     return apply(da, "to", units, equivalencies)
 
 
@@ -194,7 +194,7 @@ def set(
         UnitsNotValidError: Raised if units are not valid.
 
     """
-    if not overwrite and units_of(da) is not None:
+    if not overwrite and unitsof(da) is not None:
         raise UnitsExistError(repr(da))
 
     return da.assign_attrs({UNITS: units})
