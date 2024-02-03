@@ -10,7 +10,10 @@ xarray extension for handling units
 
 ## Overview
 
-xarray-units is an import-only package that provides a DataArray accessor `.units` for handling units such as converting units and numeric operations considering units. [Astropy](https://www.astropy.org) is used as a backend. Unlike similar implementations, xarray-units does not use a special data type to handle units, but uses the original data type in a DataArray. This allows to continue to use powerful features such as parallel and lazy processing with [Dask](https://www.dask.org) and/or user-defined DataArray subclasses.
+xarray-units is an import-only package that provides a DataArray accessor `.units` for handling units such as converting units and numeric operations considering units.
+[Astropy](https://www.astropy.org) is used as a backend.
+Unlike similar implementations, xarray-units does not use a special data type to handle units, but uses the original data type in a DataArray.
+This allows to continue to use powerful features such as parallel and lazy processing with [Dask](https://www.dask.org) and/or user-defined DataArray subclasses.
 
 ## Installation
 
@@ -57,7 +60,7 @@ array([1, 2, 3])
 Dimensions without coordinates: dim_0
 ```
 
-These are equivalent to manually un/setting the units in the DataArray attributes, but the accessor also check that the units are valid when setting.
+These are equivalent to manually un/setting the units in the DataArray attributes, but the `units ` accessor also check that the units are valid when setting.
 
 ### Converting units to others
 
@@ -97,7 +100,7 @@ Attributes:
 
 ### Numeric operations considering units
 
-xarray-units performs numerical operations considering units when the accessor is attached to the DataArray on the left side of the operator:
+xarray-units performs numerical operations considering units when the `units` accessor is attached to the DataArray on the left side of the operator:
 
 ```python
 da_m = xr.DataArray([1000, 2000, 3000]).units.set("m")
@@ -124,10 +127,12 @@ Attributes:
     units:    km
 ```
 
-The units of the DataArray after the operation follows those of the DataArray with the accessor. Therefore, the resulting data values will be different depending on the order of the operation. They are, of course, identical when considering units:
+The units of the DataArray after the operation follows those of the DataArray with the `units` accessor.
+The resulting data values will be therefore different depending on the order of the operation.
+They are, of course, equal when considering units:
 
 ```python
-da_eq = da_sum_m.units == da_sum_km
+da_eq = (da_sum_m.units == da_sum_km)
 print(da_eq)
 ```
 
@@ -136,6 +141,10 @@ print(da_eq)
 array([ True,  True,  True])
 Dimensions without coordinates: dim_0
 ```
+
+> [!IMPORTANT]
+> Because this feature is accessor-based, units are only considered for the operation right after the `units` accessor.
+> See [method and operation chains](#method-and-operation-chains) for performing multiple operations at once.
 
 ### Formatting units
 
@@ -173,27 +182,56 @@ da.units.format("latex").plot()
 
 ## Advanced usages
 
-### Use with static type checking
+### Method and operation chains
 
-xarray-units provides a special type hint `xarray_units.DataArray` that has the `units` accessor. By replacing `xarray.DataArray` with it at the beginning of the code, type checkers can statically handle the accessor and its methods:
+The `units` accessor has an option for chaining methods or operations while considering units:
 
 ```python
-import xarray as xr
-from xarray_units import DataArray
-
-xr.DataArray = DataArray
+da_m = xr.DataArray([1, 2, 3]).units.set("m")
+da_s = xr.DataArray([1, 2, 3]).units.set("s")
+da_a = da_m.units(chain=2) / da_s / da_s
+print(da_a)
 ```
 
-Note that it will become exactly identical to `xarray.DataArray` at runtime, so the replacement is not a problem at all.
+```
+<xarray.DataArray (dim_0: 3)>
+array([1.        , 0.5       , 0.33333333])
+Dimensions without coordinates: dim_0
+Attributes:
+    units:    m / s2
+```
+
+where `chain` is the number of chained methods or operations.
+This is equivalent to nesting the `units` accessors:
+
+```python
+(da_m.units / da_s).units / da_s
+```
+
+### Use with static type checking
+
+xarray-units provides a special type hint `xarray_units.DataArray` with which type checkers can statically handle the `units ` accessor and its methods:
+
+```python
+from xarray_units import DataArray
+
+da: DataArray = xr.DataArray([1, 2, 3]).units.set("km")
+```
+
+> [!TIP]
+> `xarray_units.DataArray` will be replaced by `xarray.DataArray` at runtime, so it can also be used for creating and subclassing `DataArray`.
 
 ### Use without the units accessor
 
-xarray-units provides a function `xarray_units.units` that returns the `units` accessor of a DataArray. The following two lines are therefore identical:
+xarray-units provides a function `xarray_units.units` that returns the `units` accessor of a DataArray.
+The following two codes are therefore equivalent:
 
 ```python
-import xarray as xr
+xr.DataArray([1, 2, 3]).units.set("km")
+```
+
+```python
 from xarray_units import units
 
-xr.DataArray([1, 2, 3]).units.set("km")
 units(xr.DataArray([1, 2, 3])).set("km")
 ```
