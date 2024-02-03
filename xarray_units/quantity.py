@@ -11,16 +11,15 @@ __all__ = [
 
 # standard library
 from types import MethodType, MethodWrapperType
-from typing import Any
+from typing import Any, Optional
 
 
 # dependencies
-from astropy.units import Quantity
+from astropy.units import Equivalency, Quantity
 from xarray import DataArray
 from .utils import (
     TESTER,
     UNITS,
-    Equivalencies,
     TDataArray,
     UnitsConversionError,
     UnitsExistError,
@@ -160,7 +159,7 @@ def like(
     da: TDataArray,
     other: DataArray,
     /,
-    equivalencies: Equivalencies = None,
+    equivalencies: Optional[Equivalency] = None,
 ) -> TDataArray:
     """Convert a DataArray with units to those of the other.
 
@@ -218,7 +217,7 @@ def to(
     da: TDataArray,
     units: UnitsLike,
     /,
-    equivalencies: Equivalencies = None,
+    equivalencies: Optional[Equivalency] = None,
 ) -> TDataArray:
     """Convert a DataArray with units to other units.
 
