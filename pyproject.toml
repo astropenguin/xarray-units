@@ -26,7 +26,6 @@ sphinx = "^7.2"
 
 [tool.pyright]
 typeCheckingMode = "strict"
-reportIncompatibleMethodOverride = "warning"
 reportMissingTypeStubs = "warning"
 reportUnnecessaryIsInstance = "warning"
 
