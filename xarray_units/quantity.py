@@ -117,6 +117,7 @@ def format(
     da: TDataArray,
     format: str,
     /,
+    coords: bool = True,
     **kwargs: Any,
 ) -> TDataArray:
     """Format units of a DataArray.
@@ -124,6 +125,7 @@ def format(
     Args:
         da: Input DataArray with units.
         format: Format of units (e.g. ``"console"``, ``"latex"``).
+        coords: Whether to also format the units of the coordinates.
         **kwargs: Keyword arguments of the formatting.
 
     Returns:
@@ -139,7 +141,19 @@ def format(
 
     """
     units = unitsof(da, format=format, strict=True, **kwargs)
-    return set(da, units, overwrite=True)
+    da = set(da, units, overwrite=True)
+
+    if not coords:
+        return da
+
+    for name, coord in da.coords.items():  # type: ignore
+        if (units := unitsof(coord, format=format, **kwargs)) is None:
+            continue
+
+        coord = set(coord, units, overwrite=True)  # type: ignore
+        da = da.assign_coords({name: coord})  # type: ignore
+
+    return da
 
 
 def like(
