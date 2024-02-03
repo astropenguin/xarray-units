@@ -28,7 +28,7 @@ from typing import Any, Literal, Union, get_args
 from astropy.units import Quantity
 from xarray import DataArray
 from .quantity import apply_any, set, to, unset
-from .utils import TESTER, TDataArray, UnitsConversionError, units_of
+from .utils import TESTER, TDataArray, UnitsConversionError, unitsof
 
 
 # type hints
@@ -72,8 +72,8 @@ def take(left: TDataArray, operator: Operator, right: Any, /) -> TDataArray:
         UnitsNotValidError: Raised if units are not valid.
 
     """
-    left_units = units_of(left, strict=True)
-    right_units = units_of(right, strict=False)
+    left_units = unitsof(left, strict=True)
+    right_units = unitsof(right, strict=False)
 
     if operator == "pow":
         method = f"__{operator}__"
@@ -105,7 +105,7 @@ def take(left: TDataArray, operator: Operator, right: Any, /) -> TDataArray:
     except Exception as error:
         raise UnitsConversionError(error)
 
-    if (units := units_of(test)) is None:
+    if (units := unitsof(test)) is None:
         return unset(result)
     else:
         return set(result, units, overwrite=True)

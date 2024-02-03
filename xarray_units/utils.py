@@ -4,7 +4,7 @@ __all__ = [
     "UnitsExistError",
     "UnitsNotFoundError",
     "UnitsNotValidError",
-    "units_of",
+    "unitsof",
 ]
 
 
@@ -61,7 +61,7 @@ class UnitsNotValidError(UnitsError):
 
 
 @overload
-def units_of(
+def unitsof(
     obj: Any,
     /,
     *,
@@ -72,7 +72,7 @@ def units_of(
 
 
 @overload
-def units_of(
+def unitsof(
     obj: Any,
     /,
     *,
@@ -83,7 +83,7 @@ def units_of(
 
 
 @overload
-def units_of(
+def unitsof(
     obj: Any,
     /,
     *,
@@ -94,7 +94,7 @@ def units_of(
 
 
 @overload
-def units_of(
+def unitsof(
     obj: Any,
     /,
     *,
@@ -104,7 +104,7 @@ def units_of(
 ) -> str: ...
 
 
-def units_of(
+def unitsof(
     obj: Any,
     /,
     *,

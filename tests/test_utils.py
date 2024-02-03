@@ -10,12 +10,12 @@ from xarray_units.utils import (
     UnitsConversionError,
     UnitsNotFoundError,
     UnitsNotValidError,
-    units_of,
+    unitsof,
 )
 
 
 # test data
-data_units_of: list[tuple[Any, Any, Any, Any]] = [
+data_unitsof: list[tuple[Any, Any, Any, Any]] = [
     (1, False, False, None),
     (1, "generic", False, None),
     (1, "invalid", False, None),
@@ -67,10 +67,10 @@ data_units_of: list[tuple[Any, Any, Any, Any]] = [
 ]
 
 
-@mark.parametrize("obj, format, strict, expected", data_units_of)
-def test_units_of(obj: Any, format: Any, strict: Any, expected: Any) -> None:
+@mark.parametrize("obj, format, strict, expected", data_unitsof)
+def test_unitsof(obj: Any, format: Any, strict: Any, expected: Any) -> None:
     if isinstance(expected, type) and issubclass(expected, Exception):
         with raises(expected):
-            assert units_of(obj, format=format, strict=strict)
+            assert unitsof(obj, format=format, strict=strict)
     else:
-        assert units_of(obj) == expected
+        assert unitsof(obj) == expected
