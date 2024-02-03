@@ -67,8 +67,8 @@ def units_of(
     *,
     format: None = None,
     strict: Literal[False] = False,
-) -> Optional[UnitBase]:
-    ...
+    **kwargs: Any,
+) -> Optional[UnitBase]: ...
 
 
 @overload
@@ -78,8 +78,8 @@ def units_of(
     *,
     format: str,
     strict: Literal[False] = False,
-) -> Optional[str]:
-    ...
+    **kwargs: Any,
+) -> Optional[str]: ...
 
 
 @overload
@@ -89,8 +89,8 @@ def units_of(
     *,
     format: None = None,
     strict: Literal[True] = True,
-) -> UnitBase:
-    ...
+    **kwargs: Any,
+) -> UnitBase: ...
 
 
 @overload
@@ -100,8 +100,8 @@ def units_of(
     *,
     format: str,
     strict: Literal[True] = True,
-) -> str:
-    ...
+    **kwargs: Any,
+) -> str: ...
 
 
 def units_of(
@@ -116,12 +116,11 @@ def units_of(
 
     Args:
         obj: Any object from which units are extracted.
-
-    Keyword Args:
         format: Format of units. If given, the return value
             will be ``string``. Otherwise, it will be ``UnitBase``.
         strict: Whether to allow ``None`` as the return value
             when units do not exist in the object.
+        **kwargs: Keyword arguments of the formatting.
 
     Returns:
         Extracted units from the object.
@@ -136,35 +135,31 @@ def units_of(
 
     """
 
-    if isinstance(obj, Quantity):
-        if not isinstance(units := obj.unit, UnitBase):
-            raise UnitsNotValidError(repr(obj))
-
-        if format is None:
-            return units
-
-        try:
-            return units.to_string(format, **kwargs)  # type: ignore
-        except ValueError as error:
-            raise UnitsConversionError(error)
-
     if isinstance(obj, DataArray):
-        if (units := obj.attrs.get(UNITS)) is not None:
-            try:
-                units = Unit(units)  # type: ignore
-            except Exception:
-                raise UnitsNotValidError(repr(obj))
+        units = obj.attrs.get(UNITS)
+    elif isinstance(obj, Quantity):
+        units = obj.unit
+    else:
+        units = None
 
-            if not isinstance(units, UnitBase):
-                raise UnitsNotValidError(repr(obj))
+    if units is None:
+        if not strict:
+            return None
 
-            if format is None:
-                return units
-
-            try:
-                return units.to_string(format, **kwargs)  # type: ignore
-            except ValueError as error:
-                raise UnitsConversionError(error)
-
-    if strict:
         raise UnitsNotFoundError(repr(obj))
+
+    try:
+        units = Unit(units)  # type: ignore
+    except Exception:
+        raise UnitsNotValidError(repr(obj))
+
+    if not isinstance(units, UnitBase):
+        raise UnitsNotValidError(repr(obj))
+
+    if format is None:
+        return units
+
+    try:
+        return units.to_string(format, **kwargs)  # type: ignore
+    except ValueError as error:
+        raise UnitsConversionError(error)

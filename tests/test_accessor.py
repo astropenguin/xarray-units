@@ -4,8 +4,9 @@ from typing import Any
 
 # dependencies
 from pytest import mark
+from xarray.testing import assert_identical  # type: ignore
 from xarray_units import operator, quantity
-from xarray_units.accessor import Units
+from xarray_units.accessor import DataArray, Units
 
 
 data_aliases: list[tuple[Any, Any]] = [
@@ -45,3 +46,10 @@ def test_operator(method: Any, expected: Any) -> None:
 @mark.parametrize("method, expected", data_quantity)
 def test_quantity(method: Any, expected: Any) -> None:
     assert method is expected
+
+
+def test_chain() -> None:
+    m = DataArray([1, 2, 3]).units.set("m")
+    s = DataArray([1, 2, 3]).units.set("s")
+    expected = (1 / DataArray([1, 2, 3])).units.set("m / s2")
+    assert_identical(m.units(chain=2) / s / s, expected)
