@@ -60,7 +60,8 @@ array([1, 2, 3])
 Dimensions without coordinates: dim_0
 ```
 
-These are equivalent to manually un/setting the units in the DataArray attributes, but the `units ` accessor also check that the units are valid when setting.
+> [!NOTE]
+> These are equivalent to manually un/setting the units in the DataArray attributes, but the `units` accessor also check that the units are valid when setting.
 
 ### Converting units to others
 
@@ -98,7 +99,7 @@ Attributes:
     units:    GHz
 ```
 
-> [!TIPS]
+> [!TIP]
 > There exist other accessor methods (e.g. `decompose`, `like`) for converting units.
 > See [the package guide](https://astropenguin.github.io/xarray-units/_apidoc/xarray_units.accessor.html) for more details.
 
@@ -150,7 +151,7 @@ Dimensions without coordinates: dim_0
 > Because this feature is accessor-based, units are only considered for the operation right after the `units` accessor.
 > See [method and operation chains](#method-and-operation-chains) for performing multiple operations at once.
 
-> [!TIPS]
+> [!TIP]
 > There exist accessor methods corresponding to each operator (e.g. `add` → `+`, `eq` → `==`).
 > See [the package guide](https://astropenguin.github.io/xarray-units/_apidoc/xarray_units.accessor.html) for more details.
 
