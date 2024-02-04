@@ -10,7 +10,7 @@ xarray extension for handling units
 
 ## Overview
 
-xarray-units is an import-only package that provides a [xarray](https://xarray.dev) DataArray accessor `.units` for handling units such as converting units and numeric operations considering units.
+xarray-units is an import-only package that provides an [xarray](https://xarray.dev) DataArray accessor `.units` for handling units such as converting units and numeric operations considering units.
 [Astropy](https://www.astropy.org) is used as a backend.
 Unlike similar implementations, xarray-units does not use a special data type to handle units, but uses the original data type in a DataArray.
 This allows to continue to use powerful features such as parallel and lazy processing with [Dask](https://www.dask.org) and/or user-defined DataArray subclasses.
@@ -23,7 +23,7 @@ pip install xarray-units==0.5.0
 
 ## Basic usages
 
-Suppose the following imports will be commonly used in the examples:
+Suppose the following imports will be commonly used in the examples below:
 
 ```python
 import xarray as xr
@@ -81,7 +81,7 @@ Attributes:
     units:    m
 ```
 
-Astropy [equivalencies](https://docs.astropy.org/en/stable/units/equivalencies.html) can also be used for equivalences between different units:
+Astropy [equivalencies](https://docs.astropy.org/en/stable/units/equivalencies.html) can also be used for equivalences between different types of units:
 
 ```python
 from astropy.units import spectral
@@ -249,7 +249,7 @@ Attributes:
     units:    km
 ```
 
-where `of` accepts the name(s) of the coordinate(s).
+where `of` accepts the name(s) of the coordinate(s) to be accessed.
 
 ### Method and operation chains
 
@@ -270,7 +270,7 @@ Attributes:
     units:    m / s2
 ```
 
-where `chain` is the number of chained methods or operations.
+where `chain` is the length of chained methods or operations.
 This is equivalent to nesting the `units` accessors:
 
 ```python
@@ -279,7 +279,7 @@ This is equivalent to nesting the `units` accessors:
 
 ### Use with static type checking
 
-xarray-units provides a special type hint `xarray_units.DataArray` with which type checkers can statically handle the `units ` accessor and its methods:
+xarray-units provides a special type hint `xarray_units.DataArray` with which type checkers can statically handle the `units` accessor and its methods:
 
 ```python
 from xarray_units import DataArray
